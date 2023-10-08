@@ -105,12 +105,26 @@ public class Scanner {
                             }
                             break;
 
-                        /* case '/':
-                            tokens.add(new Token(TipoToken.SLASH, "/"));
+                        case '/':
+                            if (i + 1 < source.length()) { // Asegurar que no estamos al final de la cadena
+                                char nextChar = source.charAt(i + 1); // Mirar el siguiente carácter
+                                if (nextChar == '*' && estado == 0) { // Si es un comentario de bloque
+                                    estado = 26;
+                                } else if (nextChar == '/' && estado == 0) { // Si es un comentario de línea
+                                    estado = 30;
+                                } else {
+                                    tokens.add(new Token(TipoToken.SLASH, "/", i+1));
+                                }
+                            } else {
+                                tokens.add(new Token(TipoToken.SLASH, "/", i+1));
+                            }
                             break;
+
                         case '*':
-                            tokens.add(new Token(TipoToken.STAR, "*"));
-                            break; */
+                           if (estado != 27 && estado != 28) {
+                               tokens.add(new Token(TipoToken.STAR, "*", i+1));
+                           }
+                           break;
                     }
                     if(Character.isLetter(c)){
                         estado = 9;
@@ -252,7 +266,59 @@ public class Scanner {
                         lexema = "";     
                     }
                     break;
-                                  
+
+                // RECONOCIMIENTO DE COMENTARIOS
+
+                case 26:
+                    if (c == '*') {
+                        estado = 27;
+                    } else if (c == '/') {
+                        estado = 30;
+                    } else {
+                        tokens.add(new Token(TipoToken.SLASH, "/", i+1));
+                        estado = 0; // estado 0
+                    }
+                    break;
+
+                case 27:
+                    if (c == '*') {
+                        estado = 28;
+                    }
+                    // No generamos un token, seguimos dentro del comentario.
+                    break;
+
+                case 28:
+                    if (c == '/') {
+                        estado = 29;
+                    } else if (c != '*') {
+                        estado = 27;
+                    }
+                    // No generamos un token, seguimos dentro del comentario.
+                    break;
+
+                case 29:
+                    // Aquí simplemente hemos terminado el comentario, volvemos al estado inicial.
+                    estado = 0;
+                    break;
+
+                case 30:
+                    if (c == '\n') {
+                        estado = 31;
+                    }
+                    // No generamos un token, seguimos dentro del comentario.
+                    break;
+
+                case 31:
+                    // Aquí simplemente hemos terminado el comentario, volvemos al estado inicial.
+                    estado = 0;
+                    break;
+
+                case 32:
+                    tokens.add(new Token(TipoToken.SLASH, "/", i+1));
+                    i--;  // Retrocede el puntero para no saltarse el carácter que sigue a `/`.
+                    estado = 0;
+                    break;
+
             }
         }
         
