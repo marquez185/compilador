@@ -4,7 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Scanner {
-
+    
+    private int lineaActual = 1;
     private static final Map<String, TipoToken> palabrasReservadas;
 
     static {
@@ -36,7 +37,7 @@ public class Scanner {
         String lexema = "";
         int estado = 0;
         char c;
-
+                
         for(int i=0; i<source.length(); i++){
             c = source.charAt(i);
 
@@ -61,7 +62,12 @@ public class Scanner {
                         tokens.add(t);
                         */
                     }
-
+                    
+                    else if (c == '"'){
+                        estado = 24;
+                        //"lexema += c;
+                    }
+                    lineaActual++;
                     break;
 
                 case 9:
@@ -87,28 +93,107 @@ public class Scanner {
                         i--;
                     }
                     break;
+                    
                 case 11:
-                    if(Character.isDigit(c)){
+                    if (Character.isDigit(c)) {
                         estado = 11;
                         lexema += c;
-                    }
-                    else if(c == '.'){
-
-                    }
-                    else if(c == 'E'){
-
-                    }
-                    else{
-                        Token t = new Token(TipoToken.NUMBER, lexema, Integer.valueOf(lexema));
+                    } else if (c == '.') {
+                        estado = 12;
+                        lexema += c;
+                    } else if (c == 'E') {
+                        estado = 14;
+                        lexema += c;
+                    } else if (c == '+' || c == '-') {
+                        estado = 12;  // Permitir signos en la parte decimal
+                        lexema += c;
+                    } else {
+                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
                         tokens.add(t);
-
                         estado = 0;
                         lexema = "";
+                        i--;
                     }
                     break;
+                    
+                case 12:
+                    if (Character.isDigit(c)) {
+                        estado = 13;
+                        lexema += c;
+                    } else if ((c == '+' || c == '-') && lexema.charAt(lexema.length() - 1) == 'E') {
+                        estado = 12;  // Permitir signos después de 'E'
+                        lexema += c;
+                    }
+                    break;
+                    
+                case 13:
+                    if (Character.isDigit(c)) {
+                        estado = 13;
+                        lexema += c;
+                    } else if (c == 'E') {
+                        estado = 14;
+                        lexema += c;
+                    } else {
+                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                    break;
+                    
+                case 14:
+                    if (Character.isDigit(c)) {
+                        estado = 16;
+                        lexema += c;
+                    } else if (c == '+' || c == '-') {
+                        estado = 15;
+                        lexema += c;
+                    }
+                    break;
+                    
+                case 15:
+                    if (Character.isDigit(c)) {
+                        estado = 16;
+                        lexema += c;
+                    }
+                    break;
+                    
+                case 16:
+                    if (Character.isDigit(c)) {
+                        estado = 16;
+                        lexema += c;
+                    } else {
+                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                    break;
+         
+                case 24:
+                   if(!(c == '"')){
+                        estado = 24;
+                        lexema += c;                                  
+                    }
+                    
+                    else{                      
+                        Token t = new Token(TipoToken.STRING, "\"" + lexema + "\"", lexema);
+                        tokens.add(t);
+                        
+                        estado = 0;
+                        lexema = "";     
+                    }
+                    break;
+                                  
             }
         }
-
+        
+        if (estado == 24) {
+        // Error: La cadena no se cerró con comillas
+        Interprete.error(lineaActual, "La cadena no se cerro con comillas");
+    }
 
         return tokens;
     }
