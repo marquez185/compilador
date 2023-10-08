@@ -6,7 +6,6 @@ import java.util.Map;
 public class Scanner {
     
     private int lineaActual = 1;
-    private int current = 0;
     private static final Map<String, TipoToken> palabrasReservadas;
 
     static {
@@ -27,14 +26,6 @@ public class Scanner {
     }
 
     private final String source;
-
-    private boolean match(char expected) {
-        if (source.length() > current + 1 && source.charAt(current + 1) == expected) {
-            current++; // Avanza el puntero para consumir el carácter esperado
-            return true;
-        }
-        return false;
-    }
 
     private final List<Token> tokens = new ArrayList<>();
     
@@ -85,7 +76,7 @@ public class Scanner {
                                 tokens.add(new Token(TipoToken.BANG_EQUAL, "!=",i+1));
                                 i++;  // Avanza para saltar el '='
                             } else {
-                                tokens.add(new Token(TipoToken.BANG, "!"));
+                                tokens.add(new Token(TipoToken.BANG, "!",i+1));
                             }
                             break;
                         case '=':
@@ -93,9 +84,27 @@ public class Scanner {
                                 tokens.add(new Token(TipoToken.EQUAL_EQUAL, "==", i+1));
                                 i++;  // Avanza para saltar el '='
                             } else {
-                                tokens.add(new Token(TipoToken.EQUAL, "="));
+                                tokens.add(new Token(TipoToken.EQUAL, "=",i+1));
                             }
                             break;
+                        case '>':
+                            if (i + 1 < source.length() && source.charAt(i + 1) == '=') {
+                                tokens.add(new Token(TipoToken.GREATER_EQUAL, ">=", i+1));
+                                i++;  // Avanza para saltar el '='
+                            } else {
+                                tokens.add(new Token(TipoToken.GREATER, ">",i+1));
+                            }
+                            break;
+
+                        case '<':
+                            if (i + 1 < source.length() && source.charAt(i + 1) == '=') {
+                                tokens.add(new Token(TipoToken.LESS_EQUAL, "<=", i+1));
+                                i++;  // Avanza para saltar el '='
+                            } else {
+                                tokens.add(new Token(TipoToken.LESS, "<",i+1));
+                            }
+                            break;
+
                         /* case '/':
                             tokens.add(new Token(TipoToken.SLASH, "/"));
                             break;
