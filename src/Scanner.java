@@ -6,6 +6,7 @@ import java.util.Map;
 public class Scanner {
     
     private int lineaActual = 1;
+    private int current = 0;
     private static final Map<String, TipoToken> palabrasReservadas;
 
     static {
@@ -27,6 +28,14 @@ public class Scanner {
 
     private final String source;
 
+    private boolean match(char expected) {
+        if (source.length() > current + 1 && source.charAt(current + 1) == expected) {
+            current++; // Avanza el puntero para consumir el carácter esperado
+            return true;
+        }
+        return false;
+    }
+
     private final List<Token> tokens = new ArrayList<>();
     
     public Scanner(String source){
@@ -43,11 +52,61 @@ public class Scanner {
 
             switch (estado){
                 case 0:
+                    switch (c) {
+                        case '(':
+                            tokens.add(new Token(TipoToken.LEFT_PAREN, "(",i+1));
+                            break;
+                        case ')':
+                            tokens.add(new Token(TipoToken.RIGHT_PAREN, ")",i+1));
+                            break;
+                        case '{':
+                            tokens.add(new Token(TipoToken.LEFT_BRACE, "{", i+1));
+                            break;
+                        case '}':
+                            tokens.add(new Token(TipoToken.RIGHT_BRACE, "}", i+1));
+                            break;
+                        case ',':
+                            tokens.add(new Token(TipoToken.COMMA, ",", i+1));
+                            break;
+                        case '.':
+                            tokens.add(new Token(TipoToken.DOT, ".", i+1));
+                            break;
+                        case '-':
+                            tokens.add(new Token(TipoToken.MINUS, "-", i+1));
+                            break;
+                        case '+':
+                            tokens.add(new Token(TipoToken.PLUS, "+", i+1));
+                            break;
+                        case ';':
+                            tokens.add(new Token(TipoToken.SEMICOLON, ";",i+1));
+                            break;
+                        case '!':
+                            if (i + 1 < source.length() && source.charAt(i + 1) == '=') {
+                                tokens.add(new Token(TipoToken.BANG_EQUAL, "!=",i+1));
+                                i++;  // Avanza para saltar el '='
+                            } else {
+                                tokens.add(new Token(TipoToken.BANG, "!"));
+                            }
+                            break;
+                        case '=':
+                            if (i + 1 < source.length() && source.charAt(i + 1) == '=') {
+                                tokens.add(new Token(TipoToken.EQUAL_EQUAL, "==", i+1));
+                                i++;  // Avanza para saltar el '='
+                            } else {
+                                tokens.add(new Token(TipoToken.EQUAL, "="));
+                            }
+                            break;
+                        /* case '/':
+                            tokens.add(new Token(TipoToken.SLASH, "/"));
+                            break;
+                        case '*':
+                            tokens.add(new Token(TipoToken.STAR, "*"));
+                            break; */
+                    }
                     if(Character.isLetter(c)){
                         estado = 9;
                         lexema += c;
-                    }
-                    else if(Character.isDigit(c)){
+                    } else if(Character.isDigit(c)){
                         estado = 11;
                         lexema += c;
 
@@ -61,9 +120,7 @@ public class Scanner {
                         estado = 0;
                         tokens.add(t);
                         */
-                    }
-                    
-                    else if (c == '"'){
+                    } else if (c == '"'){
                         estado = 24;
                         //"lexema += c;
                     }
@@ -194,7 +251,7 @@ public class Scanner {
         // Error: La cadena no se cerró con comillas
         Interprete.error(lineaActual, "La cadena no se cerro con comillas");
     }
-
+        tokens.add(new Token(TipoToken.EOF, "",  source.length())); //Fin del archivo
         return tokens;
     }
 }
