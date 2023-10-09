@@ -79,6 +79,12 @@ public class Scanner {
                         case ';':
                             tokens.add(new Token(TipoToken.SEMICOLON, ";",i+1));
                             break;
+                        case '[':
+                            tokens.add(new Token(TipoToken.LEFT_SQUARE, "[",i+1));
+                            break;
+                        case ']':
+                            tokens.add(new Token(TipoToken.RIGHT_SQUARE, "]",i+1));
+                            break;
                       /*  case '!':
                             if (i + 1 < source.length() && source.charAt(i + 1) == '=') {
                                 tokens.add(new Token(TipoToken.BANG_EQUAL, "!=",i+1));

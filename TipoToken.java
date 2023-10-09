@@ -21,7 +21,8 @@ public enum TipoToken {
     GREATER_EQUAL, // >=
     LESS, // <
     LESS_EQUAL, // <=
-
+    LEFT_SQUARE, // [
+    RIGHT_SQUARE, // ]
     // Literales
     IDENTIFIER, STRING, NUMBER,
 
