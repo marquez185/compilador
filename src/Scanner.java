@@ -182,6 +182,7 @@ public class Scanner {
                     if (c == '=') {
                         lexema += c;
                         tokens.add(new Token(TipoToken.GREATER_EQUAL, lexema,i));
+                        i++;
                     } else {
                         // No añadas el carácter actual al lexema aquí.
                         tokens.add(new Token(TipoToken.GREATER, ">", i));
@@ -198,8 +199,9 @@ public class Scanner {
                         i++; // Avanza al siguiente carácter para no procesar el '=' nuevamente
                     } else {
                         tokens.add(new Token(TipoToken.LESS, "<", i));
-                        i--; // Retrocede para volver a procesar el carácter actual en la siguiente iteración
+                       // i--; // Retrocede para volver a procesar el carácter actual en la siguiente iteración
                     }
+                    i--;
                     estado = 0;
                     lexema = "";
                     break;
@@ -271,7 +273,8 @@ public class Scanner {
                         i--;
                     }
                     break;
-
+                    
+                // INICIO DEL NUMERO DE PUNTO FLOTANTE
                 case 11:
                     if (Character.isDigit(c)) {
                         estado = 11;
@@ -293,7 +296,8 @@ public class Scanner {
                         i--;
                     }
                     break;
-
+                    
+                // PARTE DECIMAL DEL NUMERO
                 case 12:
                     if (Character.isDigit(c)) {
                         estado = 13;
@@ -319,7 +323,8 @@ public class Scanner {
                         i--;
                     }
                     break;
-
+                 
+                // PARTE EXPONENCIAL DEL NUMERO
                 case 14:
                     if (Character.isDigit(c)) {
                         estado = 16;
@@ -337,6 +342,7 @@ public class Scanner {
                     }
                     break;
 
+                // FINALIZAR ULTIMOS DIGITOS Y CREAMOS TOKEN NUMBER
                 case 16:
                     if (Character.isDigit(c)) {
                         estado = 16;
@@ -349,10 +355,12 @@ public class Scanner {
                         i--;
                     }
                     break;
-
+                
+                    
+                // CREAR STRINGS
                 case 24:
                     if(c=='\n'){
-                        //Interprete.error(lineaActual, "Error, ");
+                        Interprete.error(lineaActual, "Error en la cadena ");
                         estado=0;
                     }
                     else{
