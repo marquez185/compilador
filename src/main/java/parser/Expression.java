@@ -1,4 +1,4 @@
 package parser;
 
-abstract class Expression {
+public abstract class Expression {
 }

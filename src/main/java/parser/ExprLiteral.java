@@ -1,7 +1,7 @@
 package parser;
 
 import Interprete.Token;
-class ExprLiteral extends Expression {
+public class ExprLiteral extends Expression {
     final Object value;
 
     ExprLiteral(Object value) {
