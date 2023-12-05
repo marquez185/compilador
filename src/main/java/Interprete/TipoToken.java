@@ -1,3 +1,4 @@
+package Interprete;
 public enum TipoToken {
     // Tokens de un sólo caracter
     LEFT_PAREN, //  )

@@ -1,3 +1,5 @@
+package Interprete;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,7 +121,7 @@ public class Scanner {
                             }
                             break; */
 
-                        case '/':    
+                        case '/':
                             if (i + 1 < source.length()) {
                                 char nextChar = source.charAt(i + 1);
                                 if (nextChar == '*' && estado == 0) {
@@ -134,8 +136,8 @@ public class Scanner {
                             } else {
                                 tokens.add(new Token(TipoToken.SLASH, "/", i+1));
                             }
-                        break;
-                           
+                            break;
+
 
                         case '*':
                             if (estado != 27 && estado != 28) {
@@ -199,7 +201,7 @@ public class Scanner {
                         i++; // Avanza al siguiente carácter para no procesar el '=' nuevamente
                     } else {
                         tokens.add(new Token(TipoToken.LESS, "<", i));
-                       // i--; // Retrocede para volver a procesar el carácter actual en la siguiente iteración
+                        // i--; // Retrocede para volver a procesar el carácter actual en la siguiente iteración
                     }
                     i--;
                     estado = 0;
@@ -273,7 +275,7 @@ public class Scanner {
                         i--;
                     }
                     break;
-                    
+
                 // INICIO DEL NUMERO DE PUNTO FLOTANTE
                 case 11:
                     if (Character.isDigit(c)) {
@@ -296,7 +298,7 @@ public class Scanner {
                         i--;
                     }
                     break;
-                    
+
                 // PARTE DECIMAL DEL NUMERO
                 case 12:
                     if (Character.isDigit(c)) {
@@ -323,7 +325,7 @@ public class Scanner {
                         i--;
                     }
                     break;
-                 
+
                 // PARTE EXPONENCIAL DEL NUMERO
                 case 14:
                     if (Character.isDigit(c)) {
@@ -355,8 +357,8 @@ public class Scanner {
                         i--;
                     }
                     break;
-                
-                    
+
+
                 // CREAR STRINGS
                 case 24:
                     if(c=='\n'){
@@ -377,7 +379,7 @@ public class Scanner {
                             lexema = "";
                         }
                     }
-                    
+
                     break;
 
                 // RECONOCIMIENTO DE COMENTARIOS
@@ -388,10 +390,10 @@ public class Scanner {
                     } else if (c == '/') {
                         estado = 30;
                     } else {
-                        tokens.add(new Token(TipoToken.SLASH, "/", i+1));   
+                        tokens.add(new Token(TipoToken.SLASH, "/", i+1));
                         estado = 0; // estado 0}
                     }
-                   
+
                     break;
 
                 case 27:
@@ -401,10 +403,10 @@ public class Scanner {
                     break;
 
                 case 28:
-                     if (c == '/') {
-                    estado = 0; // Terminó el comentario de bloque
+                    if (c == '/') {
+                        estado = 0; // Terminó el comentario de bloque
                     } else if (c != '*') {
-                         estado = 27; // Regresar al estado anterior
+                        estado = 27; // Regresar al estado anterior
                     }
                     break;
 
@@ -415,9 +417,9 @@ public class Scanner {
                     break;
 
                 case 30:
-                      if (c == '\n') {
+                    if (c == '\n') {
                         estado = 0; // Terminó el comentario de línea
-                        }
+                    }
                     // No generamos un token, seguimos dentro del comentario.
                     break;
 
