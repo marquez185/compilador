@@ -1,34 +1,13 @@
 package Interprete;
 
-import parser.Expression;
-import parser.ExprAssign;
-import parser.ExprBinary;
-import parser.ExprCallFunction;
-import parser.ExprGet;
-import parser.ExprGrouping;
-import parser.ExprLiteral;
-import parser.ExprLogical;
-import parser.ExprSet;
-import parser.ExprSuper;
-import parser.ExprUnary;
-import parser.ExprVariable;
-
-import parser.Statement;
-import parser.StmtBlock;
-import parser.StmtExpression;
-import parser.StmtFunction;
-import parser.StmtIf;
-import parser.StmtLoop;
-import parser.StmtPrint;
-import parser.StmtReturn;
-import parser.StmtVar;
+import parser.*;
 
 import java.util.List;
 
 public class Parser {
     private final List <Token> tokens;
-    private int i = 0;
-    private Token preanalisis;
+    private int i = 0; //Numero del token en la lista
+    private Token preanalisis; //Analisis de tokens
 
     //Literales
     private final Token IDENTIFIER = new Token(TipoToken.IDENTIFIER, "", i);
@@ -75,6 +54,100 @@ public class Parser {
     private final Token GREATER_EQUAL = new Token(TipoToken.GREATER_EQUAL, "",i);
     private final Token LESS = new Token(TipoToken.LESS,"", i);
     private final Token LESS_EQUAL = new Token(TipoToken.LESS_EQUAL, "",i);
+
+    //FIN DE CADENA
+    private final Token EOF = new Token(TipoToken.EOF, "",i);
+
+    private boolean hayErrores = false; //VAR. de errores
+    public Parser(List<Token> tokens){
+        this.tokens = tokens;
+    }
+
+    public void parse(){
+        i = 0;
+        preanalisis = tokens.get(i);
+
+        program();
+
+        if(!hayErrores && !preanalisis.equals(EOF)){
+            System.out.println("Error  No se esperaba el token " + preanalisis.tipo);
+        }
+    }
+    public void program(){
+        if(preanalisis.equals(IDENTIFIER) ||
+           preanalisis.equals(STRING) ||
+           preanalisis.equals(NUMBER) ||
+           preanalisis.equals(AND) ||
+           preanalisis.equals(ELSE) ||
+           preanalisis.equals(FALSE) ||
+           preanalisis.equals(FUN) ||
+           preanalisis.equals(FOR) ||
+           preanalisis.equals(IF) ||
+           preanalisis.equals(NULL) ||
+           preanalisis.equals(OR) ||
+           preanalisis.equals(PRINT) ||
+           preanalisis.equals(RETURN) ||
+           preanalisis.equals(TRUE) ||
+           preanalisis.equals(VAR) ||
+           preanalisis.equals(WHILE) ||
+           preanalisis.equals(LEFT_PAREN) ||
+           preanalisis.equals(RIGHT_PAREN) ||
+           preanalisis.equals(LEFT_BRACE) ||
+           preanalisis.equals(RIGHT_BRACE) ||
+           preanalisis.equals(COMMA) ||
+           preanalisis.equals(DOT) ||
+           preanalisis.equals(MINUS) ||
+           preanalisis.equals(PLUS) ||
+           preanalisis.equals(SEMICOLON) ||
+           preanalisis.equals(SLASH) ||
+           preanalisis.equals(STAR) ||
+           preanalisis.equals(LEFT_SQUARE) ||
+           preanalisis.equals(RIGHT_SQUARE) ||
+           preanalisis.equals(BANG) ||
+           preanalisis.equals(BANG_EQUAL) ||
+           preanalisis.equals(EQUAL) ||
+           preanalisis.equals(EQUAL_EQUAL) ||
+           preanalisis.equals(GREATER) ||
+           preanalisis.equals(GREATER_EQUAL) ||
+           preanalisis.equals(LESS) ||
+           preanalisis.equals(LESS_EQUAL))
+        Declaration();
+        else{
+            System.out.println("Error: Expresion incorrecta" + preanalisis.tipo);
+        }
+    }
+    
+    private void Declaration() {
+        if (Interprete.error())
+            return;
+
+        if (preanalisis.equals(CLASS)) {
+            classDecl();
+            declaration();
+        } else if (preanalisis.equals(FUN)) {
+            funcDecl();
+            declaration();
+        } else if (lookahead.equals(VAR)) {
+            varDecl();
+            declaration();
+        } else if (lookahead.equals(MINUS) ||
+                lookahead.equals(PLUS) ||
+                lookahead.equals(FOR) ||
+                lookahead.equals(IF) ||
+                lookahead.equals(PRINT) ||
+                lookahead.equals(RETURN) ||
+                lookahead.equals(WHILE) ||
+                lookahead.equals(LEFT_BRACE) ||
+                lookahead.equals(TRUE) ||
+                lookahead.equals(FALSE) ||
+                lookahead.equals(NULL) ||
+                lookahead.equals(NUMBER) ||
+                lookahead.equals(STRING) ||
+                lookahead.equals(IDENTIFIER) ||
+                lookahead.equals(LEFT_PAREN){
+            StmtExpression();
+            Declaration();
+        }
 
     private void term(){
         factor();
