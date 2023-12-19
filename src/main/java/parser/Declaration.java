@@ -2,8 +2,8 @@ package parser;
 
 
 public class Declaration {
-
-    void declaration(){
+  //declaration
+    void DECLARATION(){
         if(hayerrores) return;
         if(preanalisis.tipo == TipoToken.CLASS)
         {
@@ -35,7 +35,7 @@ public class Declaration {
         }
 
     }
-    void func_decl(){
+    void FUN_DECL(){
         //FUN_DECL -> fun FUNCTION
         if(hayerrores) return;
         if(TipoToken.FUN == preanalisis.tipo)
@@ -48,7 +48,7 @@ public class Declaration {
             System.out.println("FUN_DECL Error en la posición " + preanalisis.linea + ". No se esperaba el token " + preanalisis.tipo);
         }
     }
-    void var_decl() {
+    void VAR_DECL() {
         //VAR_DECL -> var id VAR_INIT ;
         if(hayerrores) return;
         if(TipoToken.VAR == preanalisis.tipo)
@@ -64,7 +64,7 @@ public class Declaration {
         }
     }
 
-    void var_init(){
+    void VAR_INIT(){
         //VAR_INIT -> = EXPRESSION
         //-> Ɛ
         if(hayerrores) return;
