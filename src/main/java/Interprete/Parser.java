@@ -58,6 +58,7 @@ public class Parser {
     //FIN DE CADENA
     private final Token EOF = new Token(TipoToken.EOF, "",i);
 
+    // Modificar para usar la funcion de error de interprete
     private boolean hayErrores = false; //VAR. de errores
     public Parser(List<Token> tokens){
         this.tokens = tokens;
