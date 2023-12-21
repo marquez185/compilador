@@ -70,8 +70,9 @@ public class Parser {
 
         program();
 
-        if(!hayErrores && !preanalisis.equals(EOF)){
+        if(!Interprete.existenErrores && !preanalisis.equals(EOF)){
             System.out.println("Error  No se esperaba el token " + preanalisis.tipo);
+            Interprete.error(preanalisis.getNumeroLinea(), "Unexpected token " + preanalisis.getLexema());
         }
     }
     public void program(){
@@ -146,6 +147,8 @@ public class Parser {
                 lookahead.equals(STRING) ||
                 lookahead.equals(IDENTIFIER) ||
                 lookahead.equals(LEFT_PAREN){
+
+        }
             StmtExpression();
             Declaration();
         }

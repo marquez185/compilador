@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Interprete {
 
-    static boolean existenErrores = false;
+    public static boolean existenErrores = false;
 
     public static void main(String[] args) throws IOException {
         if(args.length > 1) {
