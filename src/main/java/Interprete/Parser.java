@@ -115,6 +115,30 @@ public class Parser {
             System.out.println("Error: Expresion incorrecta" + preanalisis.tipo);
         }
     }
+    
+    private void varDecl() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(VAR)) {
+          match(VAR);
+          match(IDENTIFIER);
+          varInit();
+          match(SEMICOLON);
+        } else {
+          Interprete.error(preanalisis.getNumeroLinea(), "Error se esperaba variable");
+        }
+    }
+    
+    private void varInit() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(EQUAL)) {
+          match(EQUAL);
+          expression();
+        }
+    }
      //----------------------------------BLOQUE DE STATEMENTS (SEBAS)---------------------------------------------------------------
     private void statement() {
         if (Interprete.existenErrores)
@@ -130,7 +154,9 @@ public class Parser {
             preanalisis.equals(IDENTIFIER) ||
             preanalisis.equals(LEFT_PAREN)) {
                 exprSTMT();
-        } else {
+        }   else if (preanalisis.equals(FOR)) {
+                forSTMT();
+        }   else {
              Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
         }
      }
@@ -149,6 +175,82 @@ public class Parser {
           match(SEMICOLON);
         } else {
           Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+    
+    private void forSTMT() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(FOR)) {
+          match(FOR);
+          match(LEFT_PAREN);
+          forSTMT1();
+          forSTMT2();
+          forSTMT3();
+          match(RIGHT_PAREN);
+          statement();
+        } else {
+          Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+    
+    private void forSTMT1() {
+       if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(VAR)) {
+            varDecl();
+        } else if (preanalisis.equals(MINUS) ||
+            preanalisis.equals(TRUE) ||
+            preanalisis.equals(FALSE) ||
+            preanalisis.equals(NULL) ||
+            preanalisis.equals(NUMBER) ||
+            preanalisis.equals(STRING) ||
+            preanalisis.equals(IDENTIFIER) ||
+            preanalisis.equals(LEFT_PAREN)) {
+                exprSTMT();
+        } else if (preanalisis.equals(SEMICOLON)) {
+          match(SEMICOLON);
+        } else {
+          Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+    
+    private void forSTMT2() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(MINUS) ||
+            preanalisis.equals(TRUE) ||
+            preanalisis.equals(FALSE) ||
+            preanalisis.equals(NULL) ||
+            preanalisis.equals(NUMBER) ||
+            preanalisis.equals(STRING) ||
+            preanalisis.equals(IDENTIFIER) ||
+            preanalisis.equals(LEFT_PAREN)) {
+                expression();
+                match(SEMICOLON);
+        } else if (preanalisis.equals(SEMICOLON)) {
+          match(SEMICOLON);
+        } else {
+          Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+     }
+    
+    private void forSTMT3() {
+        if (Interprete.existenErrores)
+            return;
+        
+        if (preanalisis.equals(MINUS) ||
+            preanalisis.equals(TRUE) ||
+            preanalisis.equals(FALSE) ||
+            preanalisis.equals(NULL) ||
+            preanalisis.equals(NUMBER) ||
+            preanalisis.equals(STRING) ||
+            preanalisis.equals(IDENTIFIER) ||
+            preanalisis.equals(LEFT_PAREN)) {
+                expression();
         }
     }
     
