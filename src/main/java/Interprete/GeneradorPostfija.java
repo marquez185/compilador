@@ -23,7 +23,7 @@ public class GeneradorPostfija {
         for (int i = 0; i < infija.size(); i++) {
             Token t = infija.get(i);
 
-            if (t.getType() == TokenType.EOF) {
+            if (t.getTipo()== TipoToken.EOF) {
                 break;
             }
 
@@ -37,21 +37,21 @@ public class GeneradorPostfija {
             else if (t.isOperand()) {
                 postfija.add(t);
             }
-            else if (t.getType() == TokenType.LEFT_PAREN) {
+            else if (t.getTipo() == TipoToken.LEFT_PAREN) {
                 stack.push(t);
             }
-            else if (t.getType() == TokenType.RIGHT_PAREN) {
-                while (!stack.isEmpty() && stack.peek().getType() != TokenType.LEFT_PAREN) {
+            else if (t.getTipo() == TipoToken.RIGHT_PAREN) {
+                while (!stack.isEmpty() && stack.peek().getTipo() != TipoToken.LEFT_PAREN) {
                     Token temp = stack.pop();
                     postfija.add(temp);
                 }
                 if (!stack.isEmpty()) {
-                    if (stack.peek().getType() == TokenType.LEFT_PAREN) {
+                    if (stack.peek().getTipo() == TipoToken.LEFT_PAREN) {
                         stack.pop();
                     }
                 }
-                if (controlStructure && infija.get(i + 1).getType() == TokenType.LEFT_BRACE) {
-                    postfija.add(new Token(TokenType.SEMICOLON, ";"));
+                if (controlStructure && infija.get(i + 1).getTipo() == TipoToken.LEFT_BRACE) {
+                    postfija.add(new Token(TipoToken.SEMICOLON, ";"));
                 }
             }
             else if (t.isOperator()) {
@@ -61,23 +61,23 @@ public class GeneradorPostfija {
                 }
                 stack.push(t);
             }
-            else if (t.getType() == TokenType.SEMICOLON) {
-                while (!stack.isEmpty() && stack.peek().getType() != TokenType.LEFT_BRACE) {
+            else if (t.getTipo() == TipoToken.SEMICOLON) {
+                while (!stack.isEmpty() && stack.peek().getTipo() != TipoToken.LEFT_BRACE) {
                     Token temp = stack.pop();
                     postfija.add(temp);
                 }
                 postfija.add(t);
             }
-            else if (t.getType() == TokenType.LEFT_BRACE) {
+            else if (t.getTipo() == TipoToken.LEFT_BRACE) {
                 // Se mete a la pila, tal como el parentesis. Este paso
                 // pudiera omitirse, sólo hay que tener cuidado en el manejo
                 // del "}".
                 stack.push(t);
             }
-            else if (t.getType() == TokenType.RIGHT_BRACE && controlStructure) {
+            else if (t.getTipo() == TipoToken.RIGHT_BRACE && controlStructure) {
 
                 // Primero verificar si hay un else:
-                if (infija.get(i + 1).getType() == TokenType.ELSE) {
+                if (infija.get(i + 1).getTipo() == TipoToken.ELSE) {
                     // Sacar el "{" de la pila
                     stack.pop();
                 }
@@ -87,14 +87,14 @@ public class GeneradorPostfija {
                     // El cual servirá para indicar que se finaliza la estructura
                     // de control.
                     stack.pop();
-                    postfija.add(new Token(TokenType.SEMICOLON, ";"));
+                    postfija.add(new Token(TipoToken.SEMICOLON, ";"));
 
                     // Se extrae de la pila de estrucuras de control, el elemento en el tope
                     Token aux = stackControlStructure.pop();
 
-                    if (aux.getType() == TokenType.ELSE) {
+                    if (aux.getTipo() == TipoToken.ELSE) {
                         stackControlStructure.pop();
-                        postfija.add(new Token(TokenType.SEMICOLON, ";"));
+                        postfija.add(new Token(TipoToken.SEMICOLON, ";"));
                     }
 
                     if (stackControlStructure.isEmpty()) {
@@ -112,7 +112,7 @@ public class GeneradorPostfija {
 
         while (!stackControlStructure.isEmpty()) {
             stackControlStructure.pop();
-            postfija.add(new Token(TokenType.SEMICOLON, ";"));
+            postfija.add(new Token(TipoToken.SEMICOLON, ";"));
         }
 
         return postfija;
