@@ -71,8 +71,7 @@ public class Parser {
         program();
 
         if(!Interprete.existenErrores && !preanalisis.equals(EOF)){
-            System.out.println("Error  No se esperaba el token " + preanalisis.tipo);
-            Interprete.error(preanalisis.getNumeroLinea(), "Unexpected token " + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
         }
     }
     public void program(){
