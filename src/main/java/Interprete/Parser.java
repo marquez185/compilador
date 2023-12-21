@@ -115,7 +115,168 @@ public class Parser {
             System.out.println("Error: Expresion incorrecta" + preanalisis.tipo);
         }
     }
+     //----------------------------------BLOQUE DE STATEMENTS (SEBAS)---------------------------------------------------------------
+    private void statement() {
+        if (Interprete.existenErrores)
+            return;
+
+        if ( preanalisis.equals(MINUS)) {
+            exprSTMT();
+        } else {
+             Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+     }
     
+    private void exprSTMT() {
+        if (preanalisis.equals(MINUS)) {
+          expression();
+          match(SEMICOLON);
+        } else {
+          Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+    
+    private void expression() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(MINUS)) {
+          assignment();
+        }
+    }
+    
+    private void assignment() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(MINUS)) {
+            assignment();
+            logicOr();
+            assignmentOpc();
+          } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+          }
+    }
+
+     private void assignmentOpc() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(EQUAL)) {
+          match(EQUAL);
+          expression();
+        }
+     }
+
+    private void logicOr() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(MINUS)) {
+          logicAnd();
+          logicOr2();
+        } else {
+         Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+
+    private void logicOr2() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(OR)) {
+          match(OR);
+          logicAnd();
+          logicOr2();
+        }
+     }
+    
+    private void logicAnd() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(MINUS)) {
+            equality();
+            logicAnd2();
+        } else {
+           Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+    
+    private void logicAnd2() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(AND)) {
+            match(AND);
+            equality();
+            logicAnd2();
+        }
+     }
+    
+    
+    private void equality() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(MINUS)) {
+          comparison();
+          equality2();
+        } else {
+             Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+    
+    private void equality2() {
+        if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(BANG_EQUAL)) {
+          match(BANG_EQUAL);
+          comparison();
+          equality2();
+        } else if (preanalisis.equals(EQUAL)) {
+          match(EQUAL);
+          comparison();
+          equality2();
+        }
+    }
+    
+    private void comparison() {
+        if (Interprete.existenErrores)
+            return;
+        
+        if (preanalisis.equals(MINUS)) {
+            term();
+            comparison2();
+        } else {
+             Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+    
+    private void comparison2() {
+       if (Interprete.existenErrores)
+            return;
+
+        if (preanalisis.equals(GREATER)) {
+          match(GREATER);
+          term();
+          comparison2();
+        } else if (preanalisis.equals(GREATER_EQUAL)) {
+          match(GREATER_EQUAL);
+          term();
+          comparison2();
+        } else if (preanalisis.equals(LESS)) {
+          match(LESS);
+          term();
+          comparison2();
+        } else if (preanalisis.equals(LESS_EQUAL)) {
+          match(LESS_EQUAL);
+          term();
+          comparison2();
+        }
+    }
+    //----------------------------------------------------------------------------------------------------------------------------------------
     private void Declaration() {
         if (Interprete.error())
             return;
@@ -247,7 +408,7 @@ public class Parser {
         return null;
     }
 
-
+   /*
     private void match(TipoToken tt) throws ParserException {
         if(preanalisis.getTipo() ==  tt){
             i++;
@@ -261,6 +422,18 @@ public class Parser {
             throw new ParserException(message);
         }
     }
+*/
+    private void match(Token terminal) {
+        if (Interprete.existenErrores)
+          return;
+        if (preanalisis.equals(terminal)) {
+          i++;
+          preanalisis = tokens.get(i);
+        } else {
+          Interprete.existenErrores = true;
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+     }
 
 
     private Token previous() {
