@@ -55,37 +55,37 @@ public class Scanner {
                 case 0:
                     switch (c) {
                         case '(':
-                            tokens.add(new Token(TipoToken.LEFT_PAREN, "(",i+1));
+                            tokens.add(new Token(TipoToken.LEFT_PAREN, "("));
                             break;
                         case ')':
-                            tokens.add(new Token(TipoToken.RIGHT_PAREN, ")",i+1));
+                            tokens.add(new Token(TipoToken.RIGHT_PAREN, ")"));
                             break;
                         case '{':
-                            tokens.add(new Token(TipoToken.LEFT_BRACE, "{", i+1));
+                            tokens.add(new Token(TipoToken.LEFT_BRACE, "{"));
                             break;
                         case '}':
-                            tokens.add(new Token(TipoToken.RIGHT_BRACE, "}", i+1));
+                            tokens.add(new Token(TipoToken.RIGHT_BRACE, "}"));
                             break;
                         case ',':
-                            tokens.add(new Token(TipoToken.COMMA, ",", i+1));
+                            tokens.add(new Token(TipoToken.COMMA, ","));
                             break;
                         case '.':
-                            tokens.add(new Token(TipoToken.DOT, ".", i+1));
+                            tokens.add(new Token(TipoToken.DOT, "."));
                             break;
                         case '-':
-                            tokens.add(new Token(TipoToken.MINUS, "-", i+1));
+                            tokens.add(new Token(TipoToken.MINUS, "-"));
                             break;
                         case '+':
-                            tokens.add(new Token(TipoToken.PLUS, "+", i+1));
+                            tokens.add(new Token(TipoToken.PLUS, "+"));
                             break;
                         case ';':
-                            tokens.add(new Token(TipoToken.SEMICOLON, ";",i+1));
+                            tokens.add(new Token(TipoToken.SEMICOLON, ";"));
                             break;
                         case '[':
-                            tokens.add(new Token(TipoToken.LEFT_SQUARE, "[",i+1));
+                            tokens.add(new Token(TipoToken.LEFT_SQUARE, "["));
                             break;
                         case ']':
-                            tokens.add(new Token(TipoToken.RIGHT_SQUARE, "]",i+1));
+                            tokens.add(new Token(TipoToken.RIGHT_SQUARE, "]"));
                             break;
                       /*  case '!':
                             if (i + 1 < source.length() && source.charAt(i + 1) == '=') {
@@ -131,17 +131,17 @@ public class Scanner {
                                     i++; // Avanzar sobre el segundo '/'
                                     estado = 30;
                                 } else {
-                                    tokens.add(new Token(TipoToken.SLASH, "/", i+1));
+                                    tokens.add(new Token(TipoToken.SLASH, "/"));
                                 }
                             } else {
-                                tokens.add(new Token(TipoToken.SLASH, "/", i+1));
+                                tokens.add(new Token(TipoToken.SLASH, "/"));
                             }
                             break;
 
 
                         case '*':
                             if (estado != 27 && estado != 28) {
-                                tokens.add(new Token(TipoToken.STAR, "*", i+1));
+                                tokens.add(new Token(TipoToken.STAR, "*"));
                             }
                             break;
                     }
@@ -183,11 +183,11 @@ public class Scanner {
                 case 1:
                     if (c == '=') {
                         lexema += c;
-                        tokens.add(new Token(TipoToken.GREATER_EQUAL, lexema,i));
+                        tokens.add(new Token(TipoToken.GREATER_EQUAL, lexema));
                         i++;
                     } else {
                         // No añadas el carácter actual al lexema aquí.
-                        tokens.add(new Token(TipoToken.GREATER, ">", i));
+                        tokens.add(new Token(TipoToken.GREATER, ">"));
                     }
                     estado=0;
                     lexema ="";
@@ -197,10 +197,10 @@ public class Scanner {
                 case 4:
                     if (c == '=') {
                         lexema += c;
-                        tokens.add(new Token(TipoToken.LESS_EQUAL, lexema, i));
+                        tokens.add(new Token(TipoToken.LESS_EQUAL, lexema));
                         i++; // Avanza al siguiente carácter para no procesar el '=' nuevamente
                     } else {
-                        tokens.add(new Token(TipoToken.LESS, "<", i));
+                        tokens.add(new Token(TipoToken.LESS, "<"));
                         // i--; // Retrocede para volver a procesar el carácter actual en la siguiente iteración
                     }
                     i--;
@@ -210,9 +210,9 @@ public class Scanner {
                 case 7:
                     if (c == '=') {
                         lexema += c;
-                        tokens.add(new Token(TipoToken.EQUAL_EQUAL, lexema, i));
+                        tokens.add(new Token(TipoToken.EQUAL_EQUAL, lexema));
                     } else {
-                        tokens.add(new Token(TipoToken.EQUAL, "=", i)); // Solo usa "="
+                        tokens.add(new Token(TipoToken.EQUAL, "=")); // Solo usa "="
                         i--; // retrocede para procesar el carácter actual en el próximo ciclo
                     }
                     estado=0;
@@ -222,9 +222,9 @@ public class Scanner {
                 case 10:
                     if (c == '=') {
                         lexema += c;
-                        tokens.add(new Token(TipoToken.BANG_EQUAL, lexema, i));
+                        tokens.add(new Token(TipoToken.BANG_EQUAL, lexema));
                     } else {
-                        tokens.add(new Token(TipoToken.BANG, "!", i)); // Solo usa "!"
+                        tokens.add(new Token(TipoToken.BANG, "!")); // Solo usa "!"
                         i--; // retrocede para procesar el carácter actual en el próximo ciclo
                     }
                     estado=0;
@@ -291,7 +291,8 @@ public class Scanner {
                         estado = 12;  // Permitir signos en la parte decimal
                         lexema += c;
                     } else {
-                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
+                        //Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
+                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema),0);
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
@@ -318,7 +319,8 @@ public class Scanner {
                         estado = 14;
                         lexema += c;
                     } else {
-                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
+                        //Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
+                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema),0);
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
@@ -350,7 +352,8 @@ public class Scanner {
                         estado = 16;
                         lexema += c;
                     } else {
-                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
+                        //Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema));
+                        Token t = new Token(TipoToken.NUMBER, lexema, Double.parseDouble(lexema),0);
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
@@ -362,7 +365,7 @@ public class Scanner {
                 // CREAR STRINGS
                 case 24:
                     if(c=='\n'){
-                        Interprete.error(lineaActual, "Error en la cadena ");
+                        Interprete.error(lineaActual, "Error en la cadena");
                         estado=0;
                     }
                     else{
@@ -372,7 +375,8 @@ public class Scanner {
                         }
 
                         else{
-                            Token t = new Token(TipoToken.STRING, "\"" + lexema + "\"", lexema);
+                            //Token t = new Token(TipoToken.STRING, "\"" + lexema + "\"", lexema);
+                            Token t = new Token(TipoToken.STRING,"\"" + lexema + "\"");
                             tokens.add(t);
 
                             estado = 0;
@@ -390,7 +394,7 @@ public class Scanner {
                     } else if (c == '/') {
                         estado = 30;
                     } else {
-                        tokens.add(new Token(TipoToken.SLASH, "/", i+1));
+                        tokens.add(new Token(TipoToken.SLASH, "/"));
                         estado = 0; // estado 0}
                     }
 
@@ -429,7 +433,7 @@ public class Scanner {
                     break;
 
                 case 32:
-                    tokens.add(new Token(TipoToken.SLASH, "/", i+1));
+                    tokens.add(new Token(TipoToken.SLASH, "/"));
                     i--;  // Retrocede el puntero para no saltarse el carácter que sigue a `/`.
                     estado = 0;
                     break;
@@ -441,7 +445,8 @@ public class Scanner {
             // Error: La cadena no se cerró con comillas
             Interprete.error(lineaActual, "La cadena no se cerro correctamente");
         }
-        tokens.add(new Token(TipoToken.EOF, "",  source.length())); //Fin del archivo
+        //tokens.add(new Token(TipoToken.EOF, "",  source.length())); //Fin del archivo
+        tokens.add(new Token(TipoToken.EOF, "")); //Fin del archivo
         return tokens;
     }
 }

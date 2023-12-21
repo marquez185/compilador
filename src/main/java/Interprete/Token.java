@@ -8,17 +8,17 @@ public class Token {
     final int numeroLinea;
 
 
-    public Token(TipoToken tipo, String lexema, int numeroLinea) {
-        this.tipo = tipo;
-        this.lexema = lexema;
-        this.literal = null;
-        this.numeroLinea = numeroLinea;
-    }
-
-    public Token(TipoToken tipo, String lexema, Object literal) {
+    public Token(TipoToken tipo, String lexema, Object literal, int numeroLinea) {
         this.tipo = tipo;
         this.lexema = lexema;
         this.literal = literal;
+        this.numeroLinea = numeroLinea;
+    }
+
+    public Token(TipoToken tipo, String lexema) {
+        this.tipo = tipo;
+        this.lexema = lexema;
+        this.literal = null;
         this.numeroLinea = 0;
 
     }
