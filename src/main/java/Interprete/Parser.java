@@ -98,6 +98,7 @@ public class Parser {
         else if(preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
                 || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
                 || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
+                || preanalisis.tipo == TipoToken.EQUAL || preanalisis.tipo == TipoToken.EQUAL_EQUAL
                 || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
                 || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
                 || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
@@ -125,14 +126,13 @@ public class Parser {
         if (Interprete.existenErrores) {
             return;
         }
-
         if (preanalisis.equals(VAR)) {
             match(VAR);
             match(IDENTIFIER);
             varInit();
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error se esperaba variable");
+           Interprete.error(preanalisis.getNumeroLinea(), "Error se esperaba variable");
         }
     }
 
@@ -153,16 +153,16 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if ((preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
+                || preanalisis.tipo == TipoToken.EQUAL || preanalisis.tipo == TipoToken.EQUAL_EQUAL
+                || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
+                || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
+                || preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN
+                || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.RIGHT_BRACE
+                || preanalisis.tipo == TipoToken.PLUS  || preanalisis.tipo == TipoToken.STAR)) {
             exprSTMT();
         } else if (preanalisis.equals(FOR)) {
             forSTMT();
