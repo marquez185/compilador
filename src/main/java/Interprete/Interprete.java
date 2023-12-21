@@ -51,9 +51,18 @@ public class Interprete {
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scan();
 
-            for(Token token : tokens){
+            Parser parser = new Parser(tokens);
+            parser.parse();
+
+            GeneradorPostfija gpf = new GeneradorPostfija(tokens);
+            List<Token> postfija = gpf.convertir();
+
+            GeneradorAST gast = new GeneradorAST(postfija);
+            Arbol programa = gast.generarAST();
+            programa.recorrer();
+            /*for(Token token : tokens){
                 System.out.println(token);
-            }
+            }*/
         }
         catch (Exception ex){
             ex.printStackTrace();

@@ -1,7 +1,5 @@
 package Interprete;
 
-import parser.*;
-
 import java.util.List;
 
 public class Parser {
@@ -76,14 +74,40 @@ public class Parser {
         }
     }
 
-    public void program() {
-        if (!Interprete.existenErrores) {
-            Declaration declaracion = new Declaration();
-        } else {
+    private void program() {
+        if (!Interprete.existenErrores){
+            DECLARATION();
+        }
+        else{
             System.out.println("Error: Expresion incorrecta" + preanalisis.tipo);
         }
     }
 
+    private void DECLARATION(){
+        if(Interprete.existenErrores)
+            return;
+        if(preanalisis.tipo == TipoToken.FUN)
+        {
+            funcDecl();
+            DECLARATION();
+        }
+        else if(preanalisis.tipo == TipoToken.VAR){
+            varDecl();
+            DECLARATION();
+        }
+        else if(preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
+                || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
+                || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
+                || preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN
+                || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.RIGHT_BRACE
+                || preanalisis.tipo == TipoToken.PLUS  || preanalisis.tipo == TipoToken.STAR){
+            statement();
+            DECLARATION();
+        }
+    }
     private void funcDecl() {
         if (Interprete.existenErrores) {
             return;
