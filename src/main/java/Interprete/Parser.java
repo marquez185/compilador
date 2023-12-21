@@ -7,50 +7,50 @@ import java.util.List;
 public class Parser {
     private final List <Token> tokens;
     //Literales
-    private final Token IDENTIFIER = new Token(TipoToken.IDENTIFIER, "");
-    private final Token STRING = new Token(TipoToken.STRING,"");
-    private final Token NUMBER = new Token(TipoToken.NUMBER, "");
+    private final Token IDENTIFIER = new Token(TipoToken.IDENTIFIER, "identificador");
+    private final Token STRING = new Token(TipoToken.STRING,"string");
+    private final Token NUMBER = new Token(TipoToken.NUMBER, "number");
 
     // Palabras clave
-    private final Token AND = new Token(TipoToken.AND, "");
-    private final Token ELSE = new Token(TipoToken.ELSE,"");
-    private final Token FALSE = new Token(TipoToken.FALSE, "");
-    private final Token FUN = new Token(TipoToken.FUN, "");
-    private final Token FOR = new Token(TipoToken.FOR,"");
-    private final Token IF = new Token(TipoToken.IF, "");
-    private final Token NULL = new Token(TipoToken.NULL, "");
-    private final Token OR = new Token(TipoToken.OR,"");
-    private final Token PRINT = new Token(TipoToken.PRINT, "");
-    private final Token RETURN = new Token(TipoToken.RETURN, "");
-    private final Token TRUE = new Token(TipoToken.TRUE,"");
-    private final Token VAR = new Token(TipoToken.VAR, "");
-    private final Token WHILE = new Token(TipoToken.WHILE, "");
+    private final Token AND = new Token(TipoToken.AND, "and");
+    private final Token ELSE = new Token(TipoToken.ELSE,"else");
+    private final Token FALSE = new Token(TipoToken.FALSE, "false");
+    private final Token FUN = new Token(TipoToken.FUN, "fun");
+    private final Token FOR = new Token(TipoToken.FOR,"for");
+    private final Token IF = new Token(TipoToken.IF, "if");
+    private final Token NULL = new Token(TipoToken.NULL, "null");
+    private final Token OR = new Token(TipoToken.OR,"or");
+    private final Token PRINT = new Token(TipoToken.PRINT, "print");
+    private final Token RETURN = new Token(TipoToken.RETURN, "return");
+    private final Token TRUE = new Token(TipoToken.TRUE,"true");
+    private final Token VAR = new Token(TipoToken.VAR, "var");
+    private final Token WHILE = new Token(TipoToken.WHILE, "while");
 
     // Tokens de un sólo caracter
-    private final Token LEFT_PAREN = new Token(TipoToken.LEFT_PAREN,"");
-    private final Token RIGHT_PAREN = new Token(TipoToken.RIGHT_PAREN, "");
-    private final Token LEFT_BRACE = new Token(TipoToken.LEFT_BRACE, "");
-    private final Token RIGHT_BRACE = new Token(TipoToken.RIGHT_BRACE, "");
-    private final Token COMMA = new Token(TipoToken.COMMA,"");
-    private final Token DOT = new Token(TipoToken.DOT, "");
-    private final Token MINUS = new Token(TipoToken.MINUS,"");
-    private final Token PLUS = new Token(TipoToken.PLUS, "");
-    private final Token SEMICOLON = new Token(TipoToken.SEMICOLON,"");
-    private final Token SLASH = new Token(TipoToken.SLASH, "");
-    private final Token STAR = new Token(TipoToken.STAR,"");
-    private final Token LEFT_SQUARE = new Token(TipoToken.LEFT_SQUARE,"");
-    private final Token RIGHT_SQUARE = new Token(TipoToken.RIGHT_SQUARE, "");
+    private final Token LEFT_PAREN = new Token(TipoToken.LEFT_PAREN,"(");
+    private final Token RIGHT_PAREN = new Token(TipoToken.RIGHT_PAREN, ")");
+    private final Token LEFT_BRACE = new Token(TipoToken.LEFT_BRACE, "{");
+    private final Token RIGHT_BRACE = new Token(TipoToken.RIGHT_BRACE, "}");
+    private final Token COMMA = new Token(TipoToken.COMMA,",");
+    private final Token DOT = new Token(TipoToken.DOT, ".");
+    private final Token MINUS = new Token(TipoToken.MINUS,"-");
+    private final Token PLUS = new Token(TipoToken.PLUS, "+");
+    private final Token SEMICOLON = new Token(TipoToken.SEMICOLON,";");
+    private final Token SLASH = new Token(TipoToken.SLASH, "/");
+    private final Token STAR = new Token(TipoToken.STAR,"*");
+    private final Token LEFT_SQUARE = new Token(TipoToken.LEFT_SQUARE,"[");
+    private final Token RIGHT_SQUARE = new Token(TipoToken.RIGHT_SQUARE, "]");
 
 
     // Tokens para uso logico
-    private final Token BANG = new Token(TipoToken.BANG,"");
-    private final Token BANG_EQUAL = new Token(TipoToken.BANG_EQUAL, "");
-    private final Token EQUAL = new Token(TipoToken.EQUAL, "");
-    private final Token EQUAL_EQUAL = new Token(TipoToken.EQUAL_EQUAL,"");
-    private final Token GREATER = new Token(TipoToken.GREATER, "");
-    private final Token GREATER_EQUAL = new Token(TipoToken.GREATER_EQUAL, "");
-    private final Token LESS = new Token(TipoToken.LESS,"");
-    private final Token LESS_EQUAL = new Token(TipoToken.LESS_EQUAL, "");
+    private final Token BANG = new Token(TipoToken.BANG,"!");
+    private final Token BANG_EQUAL = new Token(TipoToken.BANG_EQUAL, "!=");
+    private final Token EQUAL = new Token(TipoToken.EQUAL, "=");
+    private final Token EQUAL_EQUAL = new Token(TipoToken.EQUAL_EQUAL,"==");
+    private final Token GREATER = new Token(TipoToken.GREATER, ">");
+    private final Token GREATER_EQUAL = new Token(TipoToken.GREATER_EQUAL, ">=");
+    private final Token LESS = new Token(TipoToken.LESS,"<");
+    private final Token LESS_EQUAL = new Token(TipoToken.LESS_EQUAL, "<=");
 
     //FIN DE CADENA
     private final Token EOF = new Token(TipoToken.EOF, "");
