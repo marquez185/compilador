@@ -23,7 +23,7 @@ public class GeneradorAST {
         Nodo padre = raiz;
 
         for (Token t : postfija) {
-            if (t.getType() == TokenType.EOF) {
+            if (t.getTipo()== TipoToken.EOF) {
                 break;
             }
 
@@ -47,7 +47,7 @@ public class GeneradorAST {
                     n.insertarHijo(nodoAux);
                 }
                 pila.push(n);
-            } else if (t.getType() == TokenType.SEMICOLON) {
+            } else if (t.getTipo() == TipoToken.SEMICOLON) {
 
                 if (pila.isEmpty()) {
                     /*
@@ -59,19 +59,19 @@ public class GeneradorAST {
                 } else {
                     Nodo n = pila.pop();
 
-                    if (padre.getValue().getType() == TokenType.VAR) {
+                    if (padre.getValue().getTipo() == TipoToken.VAR) {
                         /*
                         En el caso del VAR, es necesario eliminar el igual que
                         pudiera aparecer en la raíz del nodo n.
                          */
-                        if (n.getValue().getType() == TokenType.ASSIGN) {
+                        if (n.getValue().getTipo() == TipoToken.EQUAL) {
                             padre.insertarHijos(n.getHijos());
                         } else {
                             padre.insertarSiguienteHijo(n);
                         }
                         pilaPadres.pop();
                         padre = pilaPadres.peek();
-                    } else if (padre.getValue().getType() == TokenType.PRINT) {
+                    } else if (padre.getValue().getTipo() == TipoToken.PRINT) {
                         padre.insertarSiguienteHijo(n);
                         pilaPadres.pop();
                         padre = pilaPadres.peek();
