@@ -84,6 +84,19 @@ public class Parser {
         }
     }
 
+    private void funcDecl() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(FUN)) {
+            match(FUN);
+            function();
+        } else {
+            System.out.println("Error: Se esperaba fun" + preanalisis.tipo);
+        }
+    }
+
     private void varDecl() {
         if (Interprete.existenErrores) {
             return;
@@ -116,9 +129,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
                 || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -144,8 +158,10 @@ public class Parser {
     }
 
     private void exprSTMT() {
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -184,8 +200,10 @@ public class Parser {
 
         if (preanalisis.equals(VAR)) {
             varDecl();
-        } else if (preanalisis.equals(MINUS)
+        } else if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -205,8 +223,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -227,8 +247,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -300,9 +322,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
                 || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -348,22 +371,15 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(VAR)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(PLUS)
-                || preanalisis.equals(FOR)
-                || preanalisis.equals(IF)
-                || preanalisis.equals(PRINT)
-                || preanalisis.equals(RETURN)
-                || preanalisis.equals(WHILE)
-                || preanalisis.equals(LEFT_BRACE)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
+                || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
+                || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
+                || preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN
+                || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.RIGHT_BRACE
+                || preanalisis.tipo == TipoToken.PLUS || preanalisis.tipo == TipoToken.STAR) {
             declaracion();
             blockDecl();
         }
@@ -375,9 +391,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
                 || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -393,9 +410,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
                 || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -426,9 +444,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
                 || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -459,9 +478,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
                 || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -492,9 +512,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
                 || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -529,9 +550,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)
+        if (preanalisis.equals(BANG)
                 || preanalisis.equals(MINUS)
                 || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
                 || preanalisis.equals(FALSE)
                 || preanalisis.equals(NULL)
                 || preanalisis.equals(NUMBER)
@@ -570,11 +592,312 @@ public class Parser {
     }
 
     private void term() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
+                || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
+                || preanalisis.equals(FALSE)
+                || preanalisis.equals(NULL)
+                || preanalisis.equals(NUMBER)
+                || preanalisis.equals(STRING)
+                || preanalisis.equals(IDENTIFIER)
+                || preanalisis.equals(LEFT_PAREN)) {
+            factor();
+            term2();
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+
+    private void term2() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(MINUS)) {
+            match(MINUS);
+            factor();
+            term2();
+        } else if (preanalisis.equals(PLUS)) {
+            match(PLUS);
+            factor();
+            term2();
+        }
+    }
+
+    private void factor() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
+                || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
+                || preanalisis.equals(FALSE)
+                || preanalisis.equals(NULL)
+                || preanalisis.equals(NUMBER)
+                || preanalisis.equals(STRING)
+                || preanalisis.equals(IDENTIFIER)
+                || preanalisis.equals(LEFT_PAREN)) {
+            unary();
+            factor2();
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+
+    private void factor2() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(SLASH)) {
+            match(SLASH);
+            unary();
+            factor2();
+        } else if (preanalisis.equals(STAR)) {
+            match(STAR);
+            unary();
+            factor2();
+        }
+    }
+
+    private void unary() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(BANG)) {
+            match(BANG);
+            unary();
+        } else if (preanalisis.equals(MINUS)) {
+            match(MINUS);
+            unary();
+        } else if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
+                || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
+                || preanalisis.equals(FALSE)
+                || preanalisis.equals(NULL)
+                || preanalisis.equals(NUMBER)
+                || preanalisis.equals(STRING)
+                || preanalisis.equals(IDENTIFIER)
+                || preanalisis.equals(LEFT_PAREN)) {
+            call();
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+
+    private void call() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
+                || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
+                || preanalisis.equals(FALSE)
+                || preanalisis.equals(NULL)
+                || preanalisis.equals(NUMBER)
+                || preanalisis.equals(STRING)
+                || preanalisis.equals(IDENTIFIER)
+                || preanalisis.equals(LEFT_PAREN)) {
+            primary();
+            call2();
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado" + preanalisis.getLexema());
+        }
+    }
+
+    private void call2() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(LEFT_PAREN)) {
+            match(LEFT_PAREN);
+            argumentsOpc();
+            match(RIGHT_PAREN);
+            call2();
+        } else if (preanalisis.equals(DOT)) {
+            match(DOT);
+            match(IDENTIFIER);
+            call2();
+        }
+    }
+
+    private void primary() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(TRUE)) {
+            match(TRUE);
+        } else if (preanalisis.equals(FALSE)) {
+            match(FALSE);
+        } else if (preanalisis.equals(NULL)) {
+            match(NULL);
+        } else if (preanalisis.equals(NUMBER)) {
+            match(NUMBER);
+        } else if (preanalisis.equals(STRING)) {
+            match(STRING);
+        } else if (preanalisis.equals(IDENTIFIER)) {
+            match(IDENTIFIER);
+        } else if (preanalisis.equals(LEFT_PAREN)) {
+            match(LEFT_PAREN);
+            expression();
+            match(RIGHT_PAREN);
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado" + preanalisis.getLexema());
+        }
+    }
+
+    //================================================================== BLOQUE DE OTROS ==================================================================
+    private void function() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(IDENTIFIER)) {
+            match(IDENTIFIER);
+            match(LEFT_PAREN);
+            parametersOpc();
+            match(RIGHT_PAREN);
+            block();
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba identificador" + preanalisis.getLexema());
+        }
+    }
+
+    private void functions() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(FUN)) {
+            funcDecl();
+            functions();
+        }
+    }
+
+    private void parametersOpc() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(IDENTIFIER)) {
+            parameters();
+        }
+    }
+
+    private void parameters() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(IDENTIFIER)) {
+            match(IDENTIFIER);
+            parameters2();
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba identificador" + preanalisis.getLexema());
+        }
+    }
+
+    private void parameters2() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(COMMA)) {
+            match(COMMA);
+            match(IDENTIFIER);
+            parameters2();
+        }
+    }
+
+    private void argumentsOpc() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
+                || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
+                || preanalisis.equals(FALSE)
+                || preanalisis.equals(NULL)
+                || preanalisis.equals(NUMBER)
+                || preanalisis.equals(STRING)
+                || preanalisis.equals(IDENTIFIER)
+                || preanalisis.equals(LEFT_PAREN)) {
+            arguments();
+        }
+    }
+
+    private void arguments() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(BANG)
+                || preanalisis.equals(MINUS)
+                || preanalisis.equals(TRUE)
+                || preanalisis.equals(STAR)
+                || preanalisis.equals(FALSE)
+                || preanalisis.equals(NULL)
+                || preanalisis.equals(NUMBER)
+                || preanalisis.equals(STRING)
+                || preanalisis.equals(IDENTIFIER)
+                || preanalisis.equals(LEFT_PAREN)) {
+            expression();
+            arguments2();
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba argumentos" + preanalisis.getLexema());
+        }
+    }
+
+    private void arguments2() {
+        if (Interprete.existenErrores) {
+            return;
+        }
+
+        if (preanalisis.equals(COMMA)) {
+            match(COMMA);
+            expression();
+            arguments2();
+        }
+    }
+
+    private void match(Token terminal) {
+        if (Interprete.existenErrores) {
+            return;
+        }
+        if (preanalisis.equals(terminal)) {
+            i++;
+            preanalisis = tokens.get(i);
+        } else {
+            Interprete.existenErrores = true;
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        }
+    }
+
+    private Token previous() {
+        return this.tokens.get(i - 1);
+    }
+    /*
+    private void term() {
         factor();
         term2();
     }
 
-    /*private Expression factor(){
+    private Expression factor(){
         Expression expr = unary();
         expr = factor2(expr);
         return expr;
@@ -681,20 +1004,5 @@ public class Parser {
         }
     }
      */
-    private void match(Token terminal) {
-        if (Interprete.existenErrores) {
-            return;
-        }
-        if (preanalisis.equals(terminal)) {
-            i++;
-            preanalisis = tokens.get(i);
-        } else {
-            Interprete.existenErrores = true;
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
-        }
-    }
 
-    private Token previous() {
-        return this.tokens.get(i - 1);
-    }
 }
