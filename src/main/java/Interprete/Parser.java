@@ -72,45 +72,10 @@ public class Parser {
             Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
         }
     }
-    public void program(){
-        if(preanalisis.equals(IDENTIFIER) ||
-           preanalisis.equals(STRING) ||
-           preanalisis.equals(NUMBER) ||
-           preanalisis.equals(AND) ||
-           preanalisis.equals(ELSE) ||
-           preanalisis.equals(FALSE) ||
-           preanalisis.equals(FUN) ||
-           preanalisis.equals(FOR) ||
-           preanalisis.equals(IF) ||
-           preanalisis.equals(NULL) ||
-           preanalisis.equals(OR) ||
-           preanalisis.equals(PRINT) ||
-           preanalisis.equals(RETURN) ||
-           preanalisis.equals(TRUE) ||
-           preanalisis.equals(VAR) ||
-           preanalisis.equals(WHILE) ||
-           preanalisis.equals(LEFT_PAREN) ||
-           preanalisis.equals(RIGHT_PAREN) ||
-           preanalisis.equals(LEFT_BRACE) ||
-           preanalisis.equals(RIGHT_BRACE) ||
-           preanalisis.equals(COMMA) ||
-           preanalisis.equals(DOT) ||
-           preanalisis.equals(MINUS) ||
-           preanalisis.equals(PLUS) ||
-           preanalisis.equals(SEMICOLON) ||
-           preanalisis.equals(SLASH) ||
-           preanalisis.equals(STAR) ||
-           preanalisis.equals(LEFT_SQUARE) ||
-           preanalisis.equals(RIGHT_SQUARE) ||
-           preanalisis.equals(BANG) ||
-           preanalisis.equals(BANG_EQUAL) ||
-           preanalisis.equals(EQUAL) ||
-           preanalisis.equals(EQUAL_EQUAL) ||
-           preanalisis.equals(GREATER) ||
-           preanalisis.equals(GREATER_EQUAL) ||
-           preanalisis.equals(LESS) ||
-           preanalisis.equals(LESS_EQUAL))
-        Declaration();
+    public void program() {
+        if (!Interprete.existenErrores){
+            Declaration declaracion = new Declaration();
+        }
         else{
             System.out.println("Error: Expresion incorrecta" + preanalisis.tipo);
         }
@@ -160,7 +125,7 @@ public class Parser {
              Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
         }
      }
-    
+
     private void exprSTMT() {
         if (preanalisis.equals(MINUS)||
             preanalisis.equals(MINUS) ||
@@ -253,7 +218,8 @@ public class Parser {
                 expression();
         }
     }
-    
+
+    //----------------------------------BLOQUE DE EXPRESIONES (SEBAS)---------------------------------------------------------------
     private void expression() {
         if (Interprete.existenErrores)
             return;
@@ -443,39 +409,6 @@ public class Parser {
         }
     }
     //----------------------------------------------------------------------------------------------------------------------------------------
-    private void Declaration() {
-        if (Interprete.error())
-            return;
-
-        if (preanalisis.equals(CLASS)) {
-            classDecl();
-            declaration();
-        } else if (preanalisis.equals(FUN)) {
-            funcDecl();
-            declaration();
-        } else if (lookahead.equals(VAR)) {
-            varDecl();
-            declaration();
-        } else if (lookahead.equals(MINUS) ||
-                lookahead.equals(PLUS) ||
-                lookahead.equals(FOR) ||
-                lookahead.equals(IF) ||
-                lookahead.equals(PRINT) ||
-                lookahead.equals(RETURN) ||
-                lookahead.equals(WHILE) ||
-                lookahead.equals(LEFT_BRACE) ||
-                lookahead.equals(TRUE) ||
-                lookahead.equals(FALSE) ||
-                lookahead.equals(NULL) ||
-                lookahead.equals(NUMBER) ||
-                lookahead.equals(STRING) ||
-                lookahead.equals(IDENTIFIER) ||
-                lookahead.equals(LEFT_PAREN){
-
-        }
-            StmtExpression();
-            Declaration();
-        }
 
     private void term(){
         factor();
