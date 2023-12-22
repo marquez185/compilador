@@ -1,7 +1,6 @@
 package Interprete;
 
 import java.util.List;
-
 public class Parser {
 
     private final List<Token> tokens;
@@ -56,6 +55,9 @@ public class Parser {
     private int i = 0; //Numero del token en la lista
     private Token preanalisis; //Analisis de tokens
 
+    private void declaracion() {
+    }
+
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
@@ -66,8 +68,8 @@ public class Parser {
 
         program();
 
-        if (!Interprete.existenErrores && !preanalisis.equals(EOF)) {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        if (!Interprete.existenErrores && !(preanalisis.tipo == TipoToken.EOF)) {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (PARSE): " + preanalisis.getLexema());
         }
     }
 
@@ -128,6 +130,7 @@ public class Parser {
             DECLARATION();
         }
     }
+
     private void funcDecl() {
         if (Interprete.existenErrores) {
             return;
@@ -154,6 +157,7 @@ public class Parser {
             Interprete.error(preanalisis.getNumeroLinea(), "Error se esperaba variable (VARDECL): ");
         }
     }
+
     private void varInit() {
         if (Interprete.existenErrores) {
             return;
@@ -165,7 +169,6 @@ public class Parser {
         }
 
     }
-
 
     //================================================================== BLOQUE DE STATEMENTS ==================================================================
     private void statement() {
@@ -216,6 +219,7 @@ public class Parser {
             Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (EXPRSTMT): " + preanalisis.getLexema());
         }
     }
+
     private void forSTMT() {
         if (Interprete.existenErrores) {
             return;
@@ -432,7 +436,6 @@ public class Parser {
             blockDecl();
         }
     }
-
 
     //================================================================== BLOQUE DE EXPRESIONES ==================================================================
     private void expression() {
@@ -808,7 +811,6 @@ public class Parser {
     }
 
     //================================================================== BLOQUE DE OTROS ==================================================================
-
     private void function() {
         if (Interprete.existenErrores) {
             return;
