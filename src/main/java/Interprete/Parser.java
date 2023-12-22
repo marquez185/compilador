@@ -201,29 +201,27 @@ public class Parser {
     }
 
     private void exprSTMT() {
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             expression();
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (EXPRSTMT): " + preanalisis.getLexema());
         }
     }
-
     private void forSTMT() {
         if (Interprete.existenErrores) {
             return;
         }
 
-        if (preanalisis.equals(FOR)) {
+        if (preanalisis.tipo == TipoToken.FOR) {
             match(FOR);
             match(LEFT_PAREN);
             forSTMT1();
@@ -232,7 +230,7 @@ public class Parser {
             match(RIGHT_PAREN);
             statement();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (FORSTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -241,23 +239,22 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(VAR)) {
+        if (preanalisis.tipo == TipoToken.VAR) {
             varDecl();
-        } else if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        } else if (preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             exprSTMT();
-        } else if (preanalisis.equals(SEMICOLON)) {
+        } else if (preanalisis.tipo == TipoToken.SEMICOLON) {
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (FORSTMT1): " + preanalisis.getLexema());
         }
     }
 
@@ -266,22 +263,21 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             expression();
             match(SEMICOLON);
-        } else if (preanalisis.equals(SEMICOLON)) {
+        } else if (preanalisis.tipo == TipoToken.SEMICOLON) {
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (FORSTMT2): " + preanalisis.getLexema());
         }
     }
 
@@ -309,7 +305,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(IF)) {
+        if (preanalisis.tipo == TipoToken.IF) {
             match(IF);
             match(LEFT_PAREN);
             expression();
@@ -317,7 +313,7 @@ public class Parser {
             statement();
             elseStatement();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (IFSTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -326,7 +322,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(ELSE)) {
+        if (preanalisis.tipo == TipoToken.ELSE) {
             match(ELSE);
             statement();
         }
@@ -337,12 +333,12 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(PRINT)) {
+        if (preanalisis.tipo == TipoToken.PRINT) {
             match(PRINT);
             expression();
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (PRINTSTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -351,12 +347,12 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(RETURN)) {
+        if (preanalisis.tipo == TipoToken.RETURN) {
             match(RETURN);
             returnSTMTOpc();
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (RETURNSTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -384,14 +380,14 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(WHILE)) {
+        if (preanalisis.tipo == TipoToken.WHILE) {
             match(WHILE);
             match(LEFT_PAREN);
             expression();
             match(RIGHT_PAREN);
             statement();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (WHILESTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -400,12 +396,12 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(LEFT_BRACE)) {
+        if (preanalisis.tipo == TipoToken.LEFT_BRACE) {
             match(LEFT_BRACE);
             blockDecl();
             match(RIGHT_BRACE);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba \"{\"" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba \"{\" (BLOCK)" + preanalisis.getLexema());
         }
     }
 
@@ -414,19 +410,29 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
-                || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
-                || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
-                || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
-                || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
-                || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
-                || preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN
-                || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.RIGHT_BRACE
-                || preanalisis.tipo == TipoToken.PLUS || preanalisis.tipo == TipoToken.STAR) {
-            declaracion();
+        if (preanalisis.tipo == TipoToken.VAR
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.PLUS
+                || preanalisis.tipo == TipoToken.FOR
+                || preanalisis.tipo == TipoToken.IF
+                || preanalisis.tipo == TipoToken.FUN
+                || preanalisis.tipo == TipoToken.PRINT
+                || preanalisis.tipo == TipoToken.RETURN
+                || preanalisis.tipo == TipoToken.WHILE
+                || preanalisis.tipo == TipoToken.LEFT_BRACE
+                || preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
+            DECLARATION();
             blockDecl();
         }
     }
+
 
     //================================================================== BLOQUE DE EXPRESIONES ==================================================================
     private void expression() {
