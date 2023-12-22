@@ -12,7 +12,7 @@ public class Interprete {
 
     public static boolean existenErrores = false;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException,Exception {
         if(args.length > 1) {
             System.out.println("Uso correcto: interprete [archivo.txt]");
 
@@ -25,15 +25,14 @@ public class Interprete {
         }
     }
 
-    private static void ejecutarArchivo(String path) throws IOException {
+    private static void ejecutarArchivo(String path) throws IOException,Exception{
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         ejecutar(new String(bytes, Charset.defaultCharset()));
-
         // Se indica que existe un error
         if(existenErrores) System.exit(65);
     }
 
-    private static void ejecutarPrompt() throws IOException {
+    private static void ejecutarPrompt() throws IOException, Exception {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
 
