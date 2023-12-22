@@ -1,4 +1,7 @@
 package Interprete;
+
+import java.util.Iterator;
+
 public class Arbol {
     private final Nodo raiz;
 
@@ -7,10 +10,65 @@ public class Arbol {
     }
 
     public void recorrer(){
-        recorrerAux(raiz, 0); // Iniciar el recorrido desde la raíz
+        for(Nodo n : raiz.getHijos()){
+            try {
+                Token t = n.getValue();
+                switch (t.getTipo()) {
+                    // Operadores aritméticos
+                    case PLUS:
+                    case MINUS:
+                    case STAR:
+                    case SLASH:
+                    case LESS:
+                    case GREATER:
+                    case LESS_EQUAL:
+                    case GREATER_EQUAL:
+                    case EQUAL:
+                    case BANG_EQUAL:
+                    case AND:
+                    case OR:
+                        SolverAritmetico solver = new SolverAritmetico(n);
+                        solver.solve();
+                        break;
+
+                    case VAR:
+                        VarSolver varSolver = new VarSolver(n);
+                        varSolver.solve();
+                        break;
+                    case IF:
+                        IfSolver ifSolver = new IfSolver(n);
+                        ifSolver.solve();
+                        break;
+                    case FOR:
+                        ForSolver forSolver = new ForSolver(n);
+                        forSolver.solve();
+                        break;
+                    case WHILE:
+                        WhileSolver whileSolver = new WhileSolver(n);
+                        whileSolver.solve();
+                        break;
+                    case PRINT:
+                        PrintSolver printSolver = new PrintSolver(n);
+                        printSolver.solve();
+                        break;
+                    /*case VAR:
+                        AssingSolver assingSolver = new AssingSolver(n);
+                        assingSolver.solve();*/
+                    default:
+                        break;
+
+                }
+            }
+            catch (Exception e){
+                Interprete.error(n.getValue().getNumeroLinea(), e.getMessage());
+                break;
+            }
+
+        }
+        //recorrerAux(raiz, 0); // Iniciar el recorrido desde la raíz
     }
 
-    private void recorrerAux(Nodo nodo, int nivel) {
+  /*  private void recorrerAux(Nodo nodo, int nivel) {
         if (nodo == null) return;
 
         // Aquí puedes procesar el nodo, por ejemplo, imprimir su valor
@@ -30,10 +88,9 @@ public class Arbol {
         String prefijo = new String(new char[nivel]).replace("\0", "  ");
 
         // Obtener el valor del token en el nodo
-        Token t = nodo
+        Token t = nodo;
 
         // Imprimir el token con la indentación apropiada
         System.out.println(prefijo + "Token: " + t.getLexema() + " (Tipo: " + t.getTipo() + ")");
-    }
+    }*/
 }
-.getValue();
