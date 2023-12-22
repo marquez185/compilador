@@ -1,5 +1,4 @@
 package Interprete;
-
 public class Arbol {
     private final Nodo raiz;
 
@@ -36,4 +35,3 @@ public class Arbol {
         System.out.println(prefijo + "Token: " + t.getLexema() + " (Tipo: " + t.getTipo() + ")");
     }
 }
-
