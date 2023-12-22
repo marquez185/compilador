@@ -1,7 +1,7 @@
 package Interprete;
 
 public class assign {
-    mport java.util.List;
+   /* import java.util.List;
 
     public class AssingSolver {
         private Nodo nodo;
@@ -30,4 +30,4 @@ public class assign {
 
         }
     }
-}
+*/}

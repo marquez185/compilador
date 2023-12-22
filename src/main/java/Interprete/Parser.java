@@ -1,7 +1,6 @@
 package Interprete;
 
 import java.util.List;
-
 public class Parser {
 
     private final List<Token> tokens;
@@ -69,52 +68,75 @@ public class Parser {
 
         program();
 
-        if (!Interprete.existenErrores && !preanalisis.equals(EOF)) {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+        if (!Interprete.existenErrores && !(preanalisis.tipo == TipoToken.EOF)) {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (PARSE): " + preanalisis.getLexema());
         }
     }
 
     private void program() {
-        if (!Interprete.existenErrores){
+        if (preanalisis.tipo == TipoToken.VAR
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.PLUS
+                || preanalisis.tipo == TipoToken.FUN
+                || preanalisis.tipo == TipoToken.FOR
+                || preanalisis.tipo == TipoToken.IF
+                || preanalisis.tipo == TipoToken.PRINT
+                || preanalisis.tipo == TipoToken.RETURN
+                || preanalisis.tipo == TipoToken.WHILE
+                || preanalisis.tipo == TipoToken.LEFT_BRACE
+                || preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             DECLARATION();
-        }
-        else{
-            System.out.println("Error: Expresion incorrecta" + preanalisis.tipo);
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  expresion incorrecta (PROGRAM): " + preanalisis.getLexema());
         }
     }
 
-    private void DECLARATION(){
-        if(Interprete.existenErrores)
+    private void DECLARATION() {
+        if (Interprete.existenErrores) {
             return;
-        if(preanalisis.tipo == TipoToken.FUN)
-        {
+        }
+        if (preanalisis.tipo == TipoToken.FUN) {
             funcDecl();
             DECLARATION();
-        }
-        else if(preanalisis.tipo == TipoToken.VAR){
+        } else if (preanalisis.tipo == TipoToken.VAR) {
             varDecl();
             DECLARATION();
-        }
-        else if(preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
-                || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
-                || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
-                || preanalisis.tipo == TipoToken.EQUAL || preanalisis.tipo == TipoToken.EQUAL_EQUAL
-                || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
-                || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
-                || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
-                || preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN
-                || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.RIGHT_BRACE
-                || preanalisis.tipo == TipoToken.PLUS  || preanalisis.tipo == TipoToken.STAR){
+        } else if (preanalisis.tipo == TipoToken.VAR
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.PLUS
+                || preanalisis.tipo == TipoToken.FUN
+                || preanalisis.tipo == TipoToken.FOR
+                || preanalisis.tipo == TipoToken.IF
+                || preanalisis.tipo == TipoToken.PRINT
+                || preanalisis.tipo == TipoToken.RETURN
+                || preanalisis.tipo == TipoToken.WHILE
+                || preanalisis.tipo == TipoToken.LEFT_BRACE
+                || preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             statement();
             DECLARATION();
         }
     }
+
     private void funcDecl() {
         if (Interprete.existenErrores) {
             return;
         }
 
-        if (preanalisis.equals(FUN)) {
+        if (preanalisis.tipo == TipoToken.FUN) {
             match(FUN);
             function();
         } else {
@@ -126,13 +148,13 @@ public class Parser {
         if (Interprete.existenErrores) {
             return;
         }
-        if (preanalisis.equals(VAR)) {
+        if (preanalisis.tipo == TipoToken.VAR) {
             match(VAR);
             match(IDENTIFIER);
             varInit();
             match(SEMICOLON);
         } else {
-           Interprete.error(preanalisis.getNumeroLinea(), "Error se esperaba variable");
+            Interprete.error(preanalisis.getNumeroLinea(), "Error se esperaba variable (VARDECL): ");
         }
     }
 
@@ -141,10 +163,11 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(EQUAL)) {
+        if (preanalisis.tipo == TipoToken.EQUAL) {
             match(EQUAL);
             expression();
         }
+
     }
 
     //================================================================== BLOQUE DE STATEMENTS ==================================================================
@@ -153,49 +176,47 @@ public class Parser {
             return;
         }
 
-        if ((preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
-                || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
-                || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
-                || preanalisis.tipo == TipoToken.EQUAL || preanalisis.tipo == TipoToken.EQUAL_EQUAL
-                || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
-                || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
-                || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
-                || preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN
-                || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.RIGHT_BRACE
-                || preanalisis.tipo == TipoToken.PLUS  || preanalisis.tipo == TipoToken.STAR)) {
+        if (preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             exprSTMT();
-        } else if (preanalisis.equals(FOR)) {
+        } else if (preanalisis.tipo == TipoToken.FOR) {
             forSTMT();
-        } else if (preanalisis.equals(IF)) {
+        } else if (preanalisis.tipo == TipoToken.IF) {
             ifSTMT();
-        } else if (preanalisis.equals(PRINT)) {
+        } else if (preanalisis.tipo == TipoToken.PRINT) {
             printSTMT();
-        } else if (preanalisis.equals(RETURN)) {
+        } else if (preanalisis.tipo == TipoToken.RETURN) {
             returnSTMT();
-        } else if (preanalisis.equals(WHILE)) {
+        } else if (preanalisis.tipo == TipoToken.WHILE) {
             whileSTMT();
-        } else if (preanalisis.equals(LEFT_BRACE)) {
+        } else if (preanalisis.tipo == TipoToken.LEFT_BRACE) {
             block();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (STATEMENT): " + preanalisis.getLexema());
         }
     }
 
     private void exprSTMT() {
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             expression();
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (EXPRSTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -204,7 +225,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(FOR)) {
+        if (preanalisis.tipo == TipoToken.FOR) {
             match(FOR);
             match(LEFT_PAREN);
             forSTMT1();
@@ -213,7 +234,7 @@ public class Parser {
             match(RIGHT_PAREN);
             statement();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (FORSTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -222,23 +243,22 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(VAR)) {
+        if (preanalisis.tipo == TipoToken.VAR) {
             varDecl();
-        } else if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        } else if (preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             exprSTMT();
-        } else if (preanalisis.equals(SEMICOLON)) {
+        } else if (preanalisis.tipo == TipoToken.SEMICOLON) {
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (FORSTMT1): " + preanalisis.getLexema());
         }
     }
 
@@ -247,22 +267,21 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             expression();
             match(SEMICOLON);
-        } else if (preanalisis.equals(SEMICOLON)) {
+        } else if (preanalisis.tipo == TipoToken.SEMICOLON) {
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (FORSTMT2): " + preanalisis.getLexema());
         }
     }
 
@@ -270,17 +289,17 @@ public class Parser {
         if (Interprete.existenErrores) {
             return;
         }
-
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        // if (preanalisis.equals(BANG)
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             expression();
         }
     }
@@ -290,7 +309,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(IF)) {
+        if (preanalisis.tipo == TipoToken.IF) {
             match(IF);
             match(LEFT_PAREN);
             expression();
@@ -298,7 +317,7 @@ public class Parser {
             statement();
             elseStatement();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (IFSTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -307,7 +326,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(ELSE)) {
+        if (preanalisis.tipo == TipoToken.ELSE) {
             match(ELSE);
             statement();
         }
@@ -318,12 +337,12 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(PRINT)) {
+        if (preanalisis.tipo == TipoToken.PRINT) {
             match(PRINT);
             expression();
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (PRINTSTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -332,12 +351,12 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(RETURN)) {
+        if (preanalisis.tipo == TipoToken.RETURN) {
             match(RETURN);
             returnSTMTOpc();
             match(SEMICOLON);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (RETURNSTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -346,16 +365,16 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             expression();
         }
     }
@@ -365,14 +384,14 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(WHILE)) {
+        if (preanalisis.tipo == TipoToken.WHILE) {
             match(WHILE);
             match(LEFT_PAREN);
             expression();
             match(RIGHT_PAREN);
             statement();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (WHILESTMT): " + preanalisis.getLexema());
         }
     }
 
@@ -381,12 +400,12 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(LEFT_BRACE)) {
+        if (preanalisis.tipo == TipoToken.LEFT_BRACE) {
             match(LEFT_BRACE);
             blockDecl();
             match(RIGHT_BRACE);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba \"{\"" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba \"{\" (BLOCK)" + preanalisis.getLexema());
         }
     }
 
@@ -395,16 +414,25 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
-                || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
-                || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
-                || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
-                || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
-                || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
-                || preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN
-                || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.RIGHT_BRACE
-                || preanalisis.tipo == TipoToken.PLUS || preanalisis.tipo == TipoToken.STAR) {
-            declaracion();
+        if (preanalisis.tipo == TipoToken.VAR
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.PLUS
+                || preanalisis.tipo == TipoToken.FOR
+                || preanalisis.tipo == TipoToken.IF
+                || preanalisis.tipo == TipoToken.FUN
+                || preanalisis.tipo == TipoToken.PRINT
+                || preanalisis.tipo == TipoToken.RETURN
+                || preanalisis.tipo == TipoToken.WHILE
+                || preanalisis.tipo == TipoToken.LEFT_BRACE
+                || preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
+            DECLARATION();
             blockDecl();
         }
     }
@@ -415,16 +443,16 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             assignment();
         }
     }
@@ -434,21 +462,20 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
-            assignment();
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             logicOr();
             assignmentOpc();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (ASSIGNMENT): " + preanalisis.getLexema());
         }
     }
 
@@ -457,7 +484,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(EQUAL)) {
+        if (preanalisis.tipo == TipoToken.EQUAL) {
             match(EQUAL);
             expression();
         }
@@ -468,20 +495,20 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             logicAnd();
             logicOr2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (LOGICOR): " + preanalisis.getLexema());
         }
     }
 
@@ -490,7 +517,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(OR)) {
+        if (preanalisis.tipo == TipoToken.OR) {
             match(OR);
             logicAnd();
             logicOr2();
@@ -502,20 +529,20 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             equality();
             logicAnd2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (LOGICOR2): " + preanalisis.getLexema());
         }
     }
 
@@ -524,7 +551,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(AND)) {
+        if (preanalisis.tipo == TipoToken.AND) {
             match(AND);
             equality();
             logicAnd2();
@@ -536,20 +563,20 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             comparison();
             equality2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (EQUALIYT): " + preanalisis.getLexema());
         }
     }
 
@@ -558,11 +585,11 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG_EQUAL)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL) {
             match(BANG_EQUAL);
             comparison();
             equality2();
-        } else if (preanalisis.equals(EQUAL)) {
+        } else if (preanalisis.tipo == TipoToken.EQUAL) {
             match(EQUAL);
             comparison();
             equality2();
@@ -574,20 +601,20 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             term();
             comparison2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (COMPARISON): " + preanalisis.getLexema());
         }
     }
 
@@ -596,19 +623,19 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(GREATER)) {
+        if (preanalisis.tipo == TipoToken.GREATER) {
             match(GREATER);
             term();
             comparison2();
-        } else if (preanalisis.equals(GREATER_EQUAL)) {
+        } else if (preanalisis.tipo == TipoToken.GREATER_EQUAL) {
             match(GREATER_EQUAL);
             term();
             comparison2();
-        } else if (preanalisis.equals(LESS)) {
+        } else if (preanalisis.tipo == TipoToken.LESS) {
             match(LESS);
             term();
             comparison2();
-        } else if (preanalisis.equals(LESS_EQUAL)) {
+        } else if (preanalisis.tipo == TipoToken.LESS_EQUAL) {
             match(LESS_EQUAL);
             term();
             comparison2();
@@ -620,20 +647,20 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             factor();
             term2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (TERM): " + preanalisis.getLexema());
         }
     }
 
@@ -642,11 +669,11 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)) {
+        if (preanalisis.tipo == TipoToken.MINUS) {
             match(MINUS);
             factor();
             term2();
-        } else if (preanalisis.equals(PLUS)) {
+        } else if (preanalisis.tipo == TipoToken.PLUS) {
             match(PLUS);
             factor();
             term2();
@@ -658,20 +685,20 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             unary();
             factor2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (FACTOR): " + preanalisis.getLexema());
         }
     }
 
@@ -680,11 +707,11 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(SLASH)) {
+        if (preanalisis.tipo == TipoToken.SLASH) {
             match(SLASH);
             unary();
             factor2();
-        } else if (preanalisis.equals(STAR)) {
+        } else if (preanalisis.tipo == TipoToken.STAR) {
             match(STAR);
             unary();
             factor2();
@@ -696,25 +723,25 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)) {
+        if (preanalisis.tipo == TipoToken.BANG) {
             match(BANG);
             unary();
-        } else if (preanalisis.equals(MINUS)) {
+        } else if (preanalisis.tipo == TipoToken.MINUS) {
             match(MINUS);
             unary();
-        } else if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        } else if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             call();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (UNARY): " + preanalisis.getLexema());
         }
     }
 
@@ -723,20 +750,20 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             primary();
             call2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado (CALL): " + preanalisis.getLexema());
         }
     }
 
@@ -745,12 +772,12 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.LEFT_PAREN) {
             match(LEFT_PAREN);
             argumentsOpc();
             match(RIGHT_PAREN);
             call2();
-        } else if (preanalisis.equals(DOT)) {
+        } else if (preanalisis.tipo == TipoToken.DOT) {
             match(DOT);
             match(IDENTIFIER);
             call2();
@@ -762,24 +789,24 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(TRUE)) {
+        if (preanalisis.tipo == TipoToken.TRUE) {
             match(TRUE);
-        } else if (preanalisis.equals(FALSE)) {
+        } else if (preanalisis.tipo == TipoToken.FALSE) {
             match(FALSE);
-        } else if (preanalisis.equals(NULL)) {
+        } else if (preanalisis.tipo == TipoToken.NULL) {
             match(NULL);
-        } else if (preanalisis.equals(NUMBER)) {
+        } else if (preanalisis.tipo == TipoToken.NUMBER) {
             match(NUMBER);
-        } else if (preanalisis.equals(STRING)) {
+        } else if (preanalisis.tipo == TipoToken.STRING) {
             match(STRING);
-        } else if (preanalisis.equals(IDENTIFIER)) {
+        } else if (preanalisis.tipo == TipoToken.IDENTIFIER) {
             match(IDENTIFIER);
-        } else if (preanalisis.equals(LEFT_PAREN)) {
+        } else if (preanalisis.tipo == TipoToken.LEFT_PAREN) {
             match(LEFT_PAREN);
             expression();
             match(RIGHT_PAREN);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado (PRIMARY): " + preanalisis.getLexema());
         }
     }
 
@@ -789,14 +816,14 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(IDENTIFIER)) {
+        if (preanalisis.tipo == TipoToken.IDENTIFIER) {
             match(IDENTIFIER);
             match(LEFT_PAREN);
             parametersOpc();
             match(RIGHT_PAREN);
             block();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba identificador" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba identificador (FUNCTION): " + preanalisis.getLexema());
         }
     }
 
@@ -805,7 +832,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(FUN)) {
+        if (preanalisis.tipo == TipoToken.FUN) {
             funcDecl();
             functions();
         }
@@ -816,7 +843,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(IDENTIFIER)) {
+        if (preanalisis.tipo == TipoToken.IDENTIFIER) {
             parameters();
         }
     }
@@ -826,11 +853,11 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(IDENTIFIER)) {
+        if (preanalisis.tipo == TipoToken.IDENTIFIER) {
             match(IDENTIFIER);
             parameters2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba identificador" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba identificador (PARAMETERS)" + preanalisis.getLexema());
         }
     }
 
@@ -839,7 +866,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(COMMA)) {
+        if (preanalisis.tipo == TipoToken.COMMA) {
             match(COMMA);
             match(IDENTIFIER);
             parameters2();
@@ -851,16 +878,16 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             arguments();
         }
     }
@@ -870,20 +897,20 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)
-                || preanalisis.equals(MINUS)
-                || preanalisis.equals(TRUE)
-                || preanalisis.equals(STAR)
-                || preanalisis.equals(FALSE)
-                || preanalisis.equals(NULL)
-                || preanalisis.equals(NUMBER)
-                || preanalisis.equals(STRING)
-                || preanalisis.equals(IDENTIFIER)
-                || preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.STAR
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             expression();
             arguments2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba argumentos" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Se esperaba argumentos (ARGUMENTS)" + preanalisis.getLexema());
         }
     }
 
@@ -892,7 +919,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(COMMA)) {
+        if (preanalisis.tipo == TipoToken.COMMA) {
             match(COMMA);
             expression();
             arguments2();
@@ -903,130 +930,24 @@ public class Parser {
         if (Interprete.existenErrores) {
             return;
         }
-        if (preanalisis.equals(terminal)) {
+
+        // Verificar si el tipo del token preanalisis coincide con el tipo del token terminal.
+        if (preanalisis.getTipo() == terminal.getTipo()) {
             i++;
-            preanalisis = tokens.get(i);
+            // Asegurar que i no exceda el tamaño de la lista de tokens.
+            if (i < tokens.size()) {
+                preanalisis = tokens.get(i);
+            } else {
+                // Manejar el caso de fin de lista de tokens.
+                preanalisis = new Token(TipoToken.EOF, "");
+            }
         } else {
             Interprete.existenErrores = true;
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (match) " + preanalisis.getLexema());
         }
     }
 
     private Token previous() {
         return this.tokens.get(i - 1);
     }
-    /*
-    private void term() {
-        factor();
-        term2();
-    }
-
-    private Expression factor(){
-        Expression expr = unary();
-        expr = factor2(expr);
-        return expr;
-    }
-
-    private Expression factor2(Expression expr){
-        switch (preanalisis.getTipo()){
-            case SLASH:
-                match(TipoToken.SLASH);
-                Token operador = previous();
-                Expression expr2 = unary();
-                ExprBinary expb = new ExprBinary(expr, operador, expr2);
-                return factor2(expb);
-            case STAR:
-                match(TipoToken.STAR);
-                operador = previous();
-                expr2 = unary();
-                expb = new ExprBinary(expr, operador, expr2);
-                return factor2(expb);
-        }
-        return expr;
-    }
-
-    private Expression unary(){
-        switch (preanalisis.getTipo()){
-            case BANG:
-                match(TipoToken.BANG);
-                Token operador = previous();
-                Expression expr = unary();
-                return new ExprUnary(operador, expr);
-            case MINUS:
-                match(TipoToken.MINUS);
-                operador = previous();
-                expr = unary();
-                return new ExprUnary(operador, expr);
-            default:
-                return call();
-        }
-    }
-
-    private Expression call(){
-        Expression expr = primary();
-        expr = call2(expr);
-        return expr;
-    }
-
-    private Expression call2(Expression expr){
-        switch (preanalisis.getTipo()){
-            case LEFT_PAREN:
-                match(TipoToken.LEFT_PAREN);
-                List<Expression> lstArguments = argumentsOptional();
-                match(TipoToken.RIGHT_PAREN);
-                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
-                return call2(ecf);
-        }
-        return expr;
-    }
-
-    private Expression primary(){
-        switch (preanalisis.getTipo()){
-            case TRUE:
-                match(TipoToken.TRUE);
-                return new ExprLiteral(true);
-            case FALSE:
-                match(TipoToken.FALSE);
-                return new ExprLiteral(false);
-            case NULL:
-                match(TipoToken.NULL);
-                return new ExprLiteral(null);
-            case NUMBER:
-                match(TipoToken.NUMBER);
-                Token numero = previous();
-                return new ExprLiteral(numero.getLiteral());
-            case STRING:
-                match(TipoToken.STRING);
-                Token cadena = previous();
-                return new ExprLiteral(cadena.getLiteral());
-            case IDENTIFIER:
-                match(TipoToken.IDENTIFIER);
-                Token id = previous();
-                return new ExprVariable(id);
-            case LEFT_PAREN:
-                match(TipoToken.LEFT_PAREN);
-                Expresion expr = expression();
-                // Tiene que ser cachado aquello que retorna
-                match(TipoToken.RIGHT_PAREN);
-                return new ExprGrouping(expr);
-        }
-        return null;
-    }
-
-
-    private void match(TipoToken tt) throws ParserException {
-        if(preanalisis.getTipo() ==  tt){
-            i++;
-            preanalisis = tokens.get(i);
-        }
-        else{
-            String message = "Error en la línea " +
-                    preanalisis.getPosition().getLine() +
-                    ". Se esperaba " + preanalisis.getTipo() +
-                    " pero se encontró " + tt;
-            throw new ParserException(message);
-        }
-    }
-     */
-
 }
