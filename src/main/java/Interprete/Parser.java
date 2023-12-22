@@ -469,11 +469,10 @@ public class Parser {
                 || preanalisis.tipo == TipoToken.STRING
                 || preanalisis.tipo == TipoToken.IDENTIFIER
                 || preanalisis.tipo == TipoToken.LEFT_PAREN) {
-            assignment();
             logicOr();
             assignmentOpc();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (ASSIGNMENT): " + preanalisis.getLexema());
         }
     }
 
@@ -482,7 +481,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(EQUAL)) {
+        if (preanalisis.tipo == TipoToken.EQUAL) {
             match(EQUAL);
             expression();
         }
@@ -506,7 +505,7 @@ public class Parser {
             logicAnd();
             logicOr2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (LOGICOR): " + preanalisis.getLexema());
         }
     }
 
@@ -515,7 +514,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(OR)) {
+        if (preanalisis.tipo == TipoToken.OR) {
             match(OR);
             logicAnd();
             logicOr2();
@@ -540,7 +539,7 @@ public class Parser {
             equality();
             logicAnd2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (LOGICOR2): " + preanalisis.getLexema());
         }
     }
 
@@ -549,7 +548,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(AND)) {
+        if (preanalisis.tipo == TipoToken.AND) {
             match(AND);
             equality();
             logicAnd2();
@@ -574,7 +573,7 @@ public class Parser {
             comparison();
             equality2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (EQUALIYT): " + preanalisis.getLexema());
         }
     }
 
@@ -583,11 +582,11 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG_EQUAL)) {
+        if (preanalisis.tipo == TipoToken.BANG_EQUAL) {
             match(BANG_EQUAL);
             comparison();
             equality2();
-        } else if (preanalisis.equals(EQUAL)) {
+        } else if (preanalisis.tipo == TipoToken.EQUAL) {
             match(EQUAL);
             comparison();
             equality2();
@@ -612,7 +611,7 @@ public class Parser {
             term();
             comparison2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (COMPARISON): " + preanalisis.getLexema());
         }
     }
 
@@ -621,19 +620,19 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(GREATER)) {
+        if (preanalisis.tipo == TipoToken.GREATER) {
             match(GREATER);
             term();
             comparison2();
-        } else if (preanalisis.equals(GREATER_EQUAL)) {
+        } else if (preanalisis.tipo == TipoToken.GREATER_EQUAL) {
             match(GREATER_EQUAL);
             term();
             comparison2();
-        } else if (preanalisis.equals(LESS)) {
+        } else if (preanalisis.tipo == TipoToken.LESS) {
             match(LESS);
             term();
             comparison2();
-        } else if (preanalisis.equals(LESS_EQUAL)) {
+        } else if (preanalisis.tipo == TipoToken.LESS_EQUAL) {
             match(LESS_EQUAL);
             term();
             comparison2();
@@ -658,7 +657,7 @@ public class Parser {
             factor();
             term2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (TERM): " + preanalisis.getLexema());
         }
     }
 
@@ -667,11 +666,11 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(MINUS)) {
+        if (preanalisis.tipo == TipoToken.MINUS) {
             match(MINUS);
             factor();
             term2();
-        } else if (preanalisis.equals(PLUS)) {
+        } else if (preanalisis.tipo == TipoToken.PLUS) {
             match(PLUS);
             factor();
             term2();
@@ -696,7 +695,7 @@ public class Parser {
             unary();
             factor2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (FACTOR): " + preanalisis.getLexema());
         }
     }
 
@@ -705,11 +704,11 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(SLASH)) {
+        if (preanalisis.tipo == TipoToken.SLASH) {
             match(SLASH);
             unary();
             factor2();
-        } else if (preanalisis.equals(STAR)) {
+        } else if (preanalisis.tipo == TipoToken.STAR) {
             match(STAR);
             unary();
             factor2();
@@ -721,10 +720,10 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(BANG)) {
+        if (preanalisis.tipo == TipoToken.BANG) {
             match(BANG);
             unary();
-        } else if (preanalisis.equals(MINUS)) {
+        } else if (preanalisis.tipo == TipoToken.MINUS) {
             match(MINUS);
             unary();
         } else if (preanalisis.tipo == TipoToken.BANG_EQUAL
@@ -739,7 +738,7 @@ public class Parser {
                 || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             call();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (UNARY): " + preanalisis.getLexema());
         }
     }
 
@@ -761,7 +760,7 @@ public class Parser {
             primary();
             call2();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado (CALL): " + preanalisis.getLexema());
         }
     }
 
@@ -770,12 +769,12 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(LEFT_PAREN)) {
+        if (preanalisis.tipo == TipoToken.LEFT_PAREN) {
             match(LEFT_PAREN);
             argumentsOpc();
             match(RIGHT_PAREN);
             call2();
-        } else if (preanalisis.equals(DOT)) {
+        } else if (preanalisis.tipo == TipoToken.DOT) {
             match(DOT);
             match(IDENTIFIER);
             call2();
@@ -787,24 +786,24 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(TRUE)) {
+        if (preanalisis.tipo == TipoToken.TRUE) {
             match(TRUE);
-        } else if (preanalisis.equals(FALSE)) {
+        } else if (preanalisis.tipo == TipoToken.FALSE) {
             match(FALSE);
-        } else if (preanalisis.equals(NULL)) {
+        } else if (preanalisis.tipo == TipoToken.NULL) {
             match(NULL);
-        } else if (preanalisis.equals(NUMBER)) {
+        } else if (preanalisis.tipo == TipoToken.NUMBER) {
             match(NUMBER);
-        } else if (preanalisis.equals(STRING)) {
+        } else if (preanalisis.tipo == TipoToken.STRING) {
             match(STRING);
-        } else if (preanalisis.equals(IDENTIFIER)) {
+        } else if (preanalisis.tipo == TipoToken.IDENTIFIER) {
             match(IDENTIFIER);
-        } else if (preanalisis.equals(LEFT_PAREN)) {
+        } else if (preanalisis.tipo == TipoToken.LEFT_PAREN) {
             match(LEFT_PAREN);
             expression();
             match(RIGHT_PAREN);
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  Inesperado (PRIMARY): " + preanalisis.getLexema());
         }
     }
 
