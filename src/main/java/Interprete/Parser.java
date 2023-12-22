@@ -56,9 +56,6 @@ public class Parser {
     private int i = 0; //Numero del token en la lista
     private Token preanalisis; //Analisis de tokens
 
-    private void declaracion() {
-    }
-
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
@@ -75,36 +72,58 @@ public class Parser {
     }
 
     private void program() {
-        if (!Interprete.existenErrores){
+        if (preanalisis.tipo == TipoToken.VAR
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.PLUS
+                || preanalisis.tipo == TipoToken.FUN
+                || preanalisis.tipo == TipoToken.FOR
+                || preanalisis.tipo == TipoToken.IF
+                || preanalisis.tipo == TipoToken.PRINT
+                || preanalisis.tipo == TipoToken.RETURN
+                || preanalisis.tipo == TipoToken.WHILE
+                || preanalisis.tipo == TipoToken.LEFT_BRACE
+                || preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             DECLARATION();
-        }
-        else{
-            System.out.println("Error: Expresion incorrecta" + preanalisis.tipo);
+        } else {
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  expresion incorrecta (PROGRAM): " + preanalisis.getLexema());
         }
     }
 
-    private void DECLARATION(){
-        if(Interprete.existenErrores)
+    private void DECLARATION() {
+        if (Interprete.existenErrores) {
             return;
-        if(preanalisis.tipo == TipoToken.FUN)
-        {
+        }
+        if (preanalisis.tipo == TipoToken.FUN) {
             funcDecl();
             DECLARATION();
-        }
-        else if(preanalisis.tipo == TipoToken.VAR){
+        } else if (preanalisis.tipo == TipoToken.VAR) {
             varDecl();
             DECLARATION();
-        }
-        else if(preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
-                || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
-                || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
-                || preanalisis.tipo == TipoToken.EQUAL || preanalisis.tipo == TipoToken.EQUAL_EQUAL
-                || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
-                || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
-                || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
-                || preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN
-                || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.RIGHT_BRACE
-                || preanalisis.tipo == TipoToken.PLUS  || preanalisis.tipo == TipoToken.STAR){
+        } else if (preanalisis.tipo == TipoToken.VAR
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.PLUS
+                || preanalisis.tipo == TipoToken.FUN
+                || preanalisis.tipo == TipoToken.FOR
+                || preanalisis.tipo == TipoToken.IF
+                || preanalisis.tipo == TipoToken.PRINT
+                || preanalisis.tipo == TipoToken.RETURN
+                || preanalisis.tipo == TipoToken.WHILE
+                || preanalisis.tipo == TipoToken.LEFT_BRACE
+                || preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             statement();
             DECLARATION();
         }
@@ -114,7 +133,7 @@ public class Parser {
             return;
         }
 
-        if (preanalisis.equals(FUN)) {
+        if (preanalisis.tipo == TipoToken.FUN) {
             match(FUN);
             function();
         } else {
@@ -126,26 +145,27 @@ public class Parser {
         if (Interprete.existenErrores) {
             return;
         }
-        if (preanalisis.equals(VAR)) {
+        if (preanalisis.tipo == TipoToken.VAR) {
             match(VAR);
             match(IDENTIFIER);
             varInit();
             match(SEMICOLON);
         } else {
-           Interprete.error(preanalisis.getNumeroLinea(), "Error se esperaba variable");
+            Interprete.error(preanalisis.getNumeroLinea(), "Error se esperaba variable (VARDECL): ");
         }
     }
-
     private void varInit() {
         if (Interprete.existenErrores) {
             return;
         }
 
-        if (preanalisis.equals(EQUAL)) {
+        if (preanalisis.tipo == TipoToken.EQUAL) {
             match(EQUAL);
             expression();
         }
+
     }
+
 
     //================================================================== BLOQUE DE STATEMENTS ==================================================================
     private void statement() {
@@ -153,31 +173,30 @@ public class Parser {
             return;
         }
 
-        if ((preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS
-                || preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE
-                || preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.RIGHT_SQUARE
-                || preanalisis.tipo == TipoToken.EQUAL || preanalisis.tipo == TipoToken.EQUAL_EQUAL
-                || preanalisis.tipo == TipoToken.NUMBER || preanalisis.tipo == TipoToken.STRING
-                || preanalisis.tipo == TipoToken.IDENTIFIER || preanalisis.tipo == TipoToken.RIGHT_PAREN
-                || preanalisis.tipo == TipoToken.FOR || preanalisis.tipo == TipoToken.IF
-                || preanalisis.tipo == TipoToken.PRINT || preanalisis.tipo == TipoToken.RETURN
-                || preanalisis.tipo == TipoToken.WHILE || preanalisis.tipo == TipoToken.RIGHT_BRACE
-                || preanalisis.tipo == TipoToken.PLUS  || preanalisis.tipo == TipoToken.STAR)) {
+        if (preanalisis.tipo == TipoToken.BANG
+                || preanalisis.tipo == TipoToken.MINUS
+                || preanalisis.tipo == TipoToken.TRUE
+                || preanalisis.tipo == TipoToken.FALSE
+                || preanalisis.tipo == TipoToken.NULL
+                || preanalisis.tipo == TipoToken.NUMBER
+                || preanalisis.tipo == TipoToken.STRING
+                || preanalisis.tipo == TipoToken.IDENTIFIER
+                || preanalisis.tipo == TipoToken.LEFT_PAREN) {
             exprSTMT();
-        } else if (preanalisis.equals(FOR)) {
+        } else if (preanalisis.tipo == TipoToken.FOR) {
             forSTMT();
-        } else if (preanalisis.equals(IF)) {
+        } else if (preanalisis.tipo == TipoToken.IF) {
             ifSTMT();
-        } else if (preanalisis.equals(PRINT)) {
+        } else if (preanalisis.tipo == TipoToken.PRINT) {
             printSTMT();
-        } else if (preanalisis.equals(RETURN)) {
+        } else if (preanalisis.tipo == TipoToken.RETURN) {
             returnSTMT();
-        } else if (preanalisis.equals(WHILE)) {
+        } else if (preanalisis.tipo == TipoToken.WHILE) {
             whileSTMT();
-        } else if (preanalisis.equals(LEFT_BRACE)) {
+        } else if (preanalisis.tipo == TipoToken.LEFT_BRACE) {
             block();
         } else {
-            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token" + preanalisis.getLexema());
+            Interprete.error(preanalisis.getNumeroLinea(), "Error  No se esperaba el token (STATEMENT): " + preanalisis.getLexema());
         }
     }
 
